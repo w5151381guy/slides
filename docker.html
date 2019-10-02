@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>docker slides</title>
+    <link
+      rel="shortcut icon"
+      href="https://image.flaticon.com/icons/svg/25/25231.svg"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/night.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.min.js"></script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <section>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Docker_%28container_engine%29_logo.svg/2880px-Docker_%28container_engine%29_logo.svg.png"
+            />
+          </section>
+          <section>
+            <h3>什麼是 docker</h3>
+            <p>docker 是一套可以幫助應用程式進行部署的套件</p>
+          </section>
+          <section>
+            <p>通常我們會把部署後的產物稱之為：</p>
+            <h3>容器(container)</h3>
+          </section>
+          <section>
+            <p>既然有容器就一定會有可以填滿這個容器的東西</p>
+          </section>
+          <section>
+            <p>用來填滿這個容器的東西稱之為：</p>
+            <h3>映像檔(image)</h3>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>docker v.s virtual machine</h3>
+          </section>
+          <section>
+            <p>
+              在 docker 還沒有盛行之前，我們都會利用 virtual machine 來模擬
+              linux 的環境。
+            </p>
+          </section>
+          <section>
+            <p>常見的 virtual machine 有這些：</p>
+            <img
+              src="https://briian.com/wp-content/uploads/2013/10/virtualbox-logo.png"
+            />
+            <img
+              src="https://static.makeuseof.com/wp-content/uploads/2012/12/vmware-player-icon.png"
+            />
+          </section>
+          <section>
+            <p>
+              virtual machine
+              簡單來說就是在現有的作業系統中再建立一個新的虛擬的作業系統，並利用這個虛擬的作業系統來處理事情。
+            </p>
+          </section>
+          <section>
+            <p>
+              既然要運行一套新的作業系統，所以也需要 CPU 、 RAM 等等硬體空間
+            </p>
+          </section>
+          <section>
+            <p>所以可想而知使用 virtual machine 的下場就是：</p>
+            <img src="https://imgur.com/0bLWMif.png" />
+          </section>
+          <section>
+            <p>而 virtual machine 整體架構上就會長得像這樣：</p>
+            <img src="https://imgur.com/xnQNeSs.png" />
+          </section>
+          <section>
+            <h3>難道 docker 就不一樣嗎？</h3>
+          </section>
+          <section>
+            <p>docker 最主要的功能就是在虛擬化「應用程式及其相對應的環境」</p>
+            <p>
+              也就是說我不用像 virtual machine
+              一樣產生一套專屬於該應用程式的虛擬作業系統，就可以直接進行應用程式的部署。
+            </p>
+          </section>
+          <section>
+            <p>
+              有了 docker 之後就不用像 virtual machine 一樣吃那麼多硬體資源了。
+            </p>
+            <img src="https://imgur.com/aAVfW0J.png" />
+          </section>
+          <section>
+            <p>而 docker 整體架構上就會長得像這樣：</p>
+            <img src="https://imgur.com/INYzYV0.png" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <p>
+              在開始正式進入 docker 的教學之前先來講講 Docker Hub 這個網站。
+            </p>
+          </section>
+          <section>
+            <p>
+              不曉得為什麼工程師特別喜歡用 Hub 這個名詞來代表某一項事物的集合。
+            </p>
+          </section>
+          <section>
+            <p>像是 Git 有 GitHub</p>
+            <img
+              src="https://miro.medium.com/max/1200/1*9PnPjPI65fGwLiMfluVLrw.jpeg"
+            />
+          </section>
+          <section>
+            <p>docker 有 Docker Hub</p>
+            <img
+              src="https://raw.githubusercontent.com/docker-library/docs/c350af05d3fac7b5c3f6327ac82fe4d990d8729c/docker/logo.png"
+            />
+          </section>
+          <section>
+            <p>還有另一個流量最大的 xxxxHub 是什麼就不好說了XD</p>
+          </section>
+          <section>
+            <h4>回歸正題 Docker Hub 是用來做什麼呢？</h4>
+          </section>
+          <section>
+            <p>Docker Hub 是用來存放所有 docker 會用到的映像檔的大型倉庫，</p>
+            <p>
+              透過 Docker Hub
+              我們就可以順利地引用這些映像檔來達到虛擬化「應用程式及其相對應的環境」
+            </p>
+          </section>
+          <section>
+            <p>
+              所以我們之後要利用的映像檔都會從 Docker Hub
+              <a
+                href="https://hub.docker.com/search?q=&type=image"
+                target="_blank"
+                >這邊</a
+              >
+              抓取喔！
+            </p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <p>接下來就正式進入重點內容，到底 docker 該如何使用</p>
+          </section>
+          <section>
+            <p>
+              通常我們會撰寫一個叫 Dockerfile 的檔案來進行應用程式的環境部署。
+            </p>
+          </section>
+          <section>
+            <p>Dockerfile 的寫法簡單來說分為四個階段：</p>
+            <ul>
+              <li>FROM：哪個映像檔</li>
+              <li>WORKDIR：應用程式執行位置</li>
+              <li>ADD/COPY：新增或複製檔案到應用程式執行位置</li>
+              <li>RUN：執行應用程式</li>
+            </ul>
+          </section>
+          <section>
+            <p>所以整體寫法就會長得像這樣：</p>
+            <img src="https://imgur.com/WnczMMo.png" height="500" />
+          </section>
+          <section>
+            <p>當然還有更進階的用法，這邊以前端為例子</p>
+            <p>
+              情境是：利用 webpack 或 gulp 將檔案 build 成靜態檔並利用 nginx
+              進行 serve static files 的動作
+            </p>
+          </section>
+          <section>
+            <p>
+              這邊會用到 as 這個觀念，as
+              後面會接一個代稱，目的是為了將這個映像檔包裝成 as 設定好的代稱
+            </p>
+            <p>
+              這樣做的好處就是可以把這個映像檔的內容快速地提供給該 Dockerfile
+              下的其他映像檔使用
+            </p>
+          </section>
+          <section>
+            <p>最終整體寫法就會長得像這樣：</p>
+            <img src="https://imgur.com/pmWBcOy.png" height="500" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <p>學會了怎麼撰寫 DockerFile 後接下來講講 docker 指令集</p>
+            <p>有了指令才能順利地產出 docker 容器</p>
+          </section>
+          <section>
+            <h4>
+              docker build Dockerfile -t imageName：編譯 Dockerfile
+              內容並產生相對應的映像檔
+            </h4>
+            <img src="https://imgur.com/Iqw89KY.gif" height="500" />
+          </section>
+          <section>
+            <h4>docker images：列出該機器下的所有映像檔</h4>
+            <img src="https://imgur.com/t8VqsEG.gif" height="500" />
+          </section>
+          <section>
+            <h4>docker run -d image：產生容器，並執行於背景</h4>
+            <img src="https://imgur.com/czFDvwb.gif" height="500" />
+          </section>
+          <section>
+            <h4>docker container ps -a：列出該機器下的所有容器</h4>
+            <img src="https://imgur.com/ZC0bucU.gif" height="500" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>接下來講講如何改善 Dockerfile</h3>
+          </section>
+          <section>
+            <h3>首先來 build 這份 Dockerfile吧</h3>
+            <img src="https://imgur.com/xeqxXVV.gif" height="500" />
+          </section>
+          <section>
+            <p>可以發現在 build 的過程中不斷的在 using cache</p>
+            <p>所以我們可以知道想要把 Dockerfile 寫得好，就要善用 cache</p>
+            <p>因為 docker 在進行 build 的動作時都會把過程存到 cache</p>
+            <p>以便於下次在 build 的過程中可以利用 cache 進行快速建置</p>
+          </section>
+          <section>
+            <p>這是份不合格的 Dockerfile</p>
+            <img src="https://imgur.com/pmWBcOy.png" height="500" />
+          </section>
+          <section>
+            <p>
+              接下來我們改變一下專案的隨便一個檔案再來重 build 看看會發生什麼事
+            </p>
+            <img src="https://imgur.com/Cx2fDqS.gif" height="500" />
+          </section>
+          <section>
+            <p>可以發現每次更改檔案都進行 npm i 這個過程</p>
+            <p>明明我只是改檔案沒有改到 package.json</p>
+            <p>但全部都重新安裝一次了</p>
+            <p>這個 Dockerfile 就是個很不好的 Dockerfile</p>
+          </section>
+          <section>
+            <h3>那要如何改善呢？</h3>
+          </section>
+          <section>
+            <p>
+              最簡單的方法就是把 package.json 這種比較不會一直更動的檔案先進行
+              COPY ，這樣就可以確保套件不會一直重新安裝，因為有 cache 的存在
+            </p>
+          </section>
+          <section>
+            <p>但其實剛剛那份 Dockerfile 還有一個非常大的問題</p>
+            <p>我們 nginx 需要做的事只有 serve static files 而已</p>
+            <p>
+              但這邊卻把整個專案包括套件都傳入 nginx 所以 nginx
+              的映像檔就會非常肥
+            </p>
+          </section>
+          <section>
+            <p>所以我們可以在把靜態檔傳到 nginx 的映像檔中時先把套件移除</p>
+            <p>這樣就會讓 nginx 的映像檔變小了</p>
+          </section>
+          <section>
+            <p>最終的 Dockerfile 就會長得像這樣：</p>
+            <img src="https://imgur.com/IFjSPOi.png" height="500" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <p>下次的分享會主題是更進階的 docker：docker-compose</p>
+          </section>
+          <section>
+            <p>謝謝大家</p>
+          </section>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  window.onload = () => {
+    Reveal.initialize()
+  }
+</script>
