@@ -31,7 +31,7 @@
           </section>
           <section>
             <h3>什麼是 docker</h3>
-            <p>docker 是一套可以幫助應用程式進行部署的套件</p>
+            <p>docker 是一套輕量級的虛擬化工具。</p>
           </section>
           <section>
             <p>通常我們會把部署後的產物稱之為：</p>
@@ -102,6 +102,10 @@
           <section>
             <p>而 docker 整體架構上就會長得像這樣：</p>
             <img src="https://imgur.com/INYzYV0.png" />
+          </section>
+          <section>
+            <p>從上面的架構圖可以發現，其實 docker 有個非常大的好處：</p>
+            <p>可以隔離各個容器</p>
           </section>
         </section>
         <section>
@@ -183,11 +187,14 @@
           </section>
           <section>
             <p>
-              這邊會用到 as 這個觀念，as
-              後面會接一個代稱，目的是為了將這個映像檔包裝成 as 設定好的代稱
+              這邊會用到 multi-stage build 的觀念，要使用 multi-stage build
+              也很簡單，只要用到 as 這個關鍵字就好
             </p>
             <p>
-              這樣做的好處就是可以把這個映像檔的內容快速地提供給該 Dockerfile
+              as 後面會接一個代稱，目的是為了將這個映像檔包裝成 as 設定好的代稱
+            </p>
+            <p>
+              透過 as 就可以把這個映像檔的內容快速地提供給該 Dockerfile
               下的其他映像檔使用
             </p>
           </section>
