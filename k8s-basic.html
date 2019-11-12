@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>k8s</title>
+    <link
+      rel="shortcut icon"
+      href="https://miro.medium.com/max/7200/1*afkK1deEdJkuN3IhnzuzKg.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/lib/css/monokai.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/night.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/js/reveal.min.js"></script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <section>
+            <img
+              src="https://miro.medium.com/max/722/1*JLj6qvILdKWBFjt1sxE7rQ.jpeg"
+            />
+          </section>
+          <section>
+            <h3>為什麼 kubernetes 會叫 k8s？</h3>
+          </section>
+          <section>
+            <p>因為 ubernete 剛好有 8 個字母</p>
+            <p>所以就把中間的字母用 8 代替了</p>
+          </section>
+          <section>
+            <h3>什麼是 k8s？</h3>
+          </section>
+          <section>
+            <p>k8s 是一套用來自動部署、擴展和管理容器化應用程式的開源系統。</p>
+          </section>
+        </section>
+        <section>
+          <h3>分享會大綱</h3>
+          <ol>
+            <li>前置作業</li>
+            <li>Pod</li>
+            <li>Service</li>
+            <li>Ingress</li>
+            <li>Secret</li>
+            <li>ConfigMap</li>
+            <li>Namespace</li>
+          </ol>
+        </section>
+        <section>
+          <section>
+            <h3>
+              安裝
+              <a href="https://minikube.sigs.k8s.io/docs/start/">minikube</a>
+            </h3>
+          </section>
+          <section>
+            <p>
+              minikube 是由 Google
+              發布的一個輕量級工具。讓開發者可以在本機上輕易架設一個 Kubernetes
+              叢集(Cluster)
+            </p>
+          </section>
+          <section>
+            <h3>
+              安裝
+              <a
+                href="https://minikube.sigs.k8s.io/docs/reference/drivers/hyperkit/"
+                >hyperkit</a
+              >
+            </h3>
+          </section>
+          <section>
+            <p>
+              hyperkit 是一套 for macOS 的虛擬機器監視器(hypervisor)，透過這個
+              driver 來啟動 minikube。
+            </p>
+          </section>
+          <section>
+            <p>minikube start --vm-driver=hyperkit</p>
+            <img src="https://imgur.com/4Ow5iue.png" />
+          </section>
+          <section>
+            <h3>
+              安裝<a
+                href="https://kubernetes.io/docs/tasks/tools/install-kubectl/"
+                >kubectl</a
+              >
+            </h3>
+          </section>
+          <section>
+            <p>
+              ctl 全名其實就是 control 的意思，所以 kubectl 意思就是 control
+              kubernetes 的工具啦！
+            </p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Pod？</h3>
+          </section>
+          <section>
+            <p>在官網上是這樣說明的</p>
+            <blockquote>
+              Pods are the smallest deployable units of computing that can be
+              created and managed in Kubernetes.
+            </blockquote>
+          </section>
+          <section>
+            <p>簡單來說 Pod 就是 k8s 中可以執行的最小單位</p>
+          </section>
+          <section>
+            <p>
+              由於 Pod 只是一個可以被執行的最小單位，可想而知在一個 Pod
+              內一定有能被執行的內容
+            </p>
+            <p>這些可以被執行內容的我們稱之為 container</p>
+          </section>
+          <section>
+            <p>簡單來說 Pod 的架構圖會長這樣：</p>
+            <img
+              src="https://matthewpalmer.net/kubernetes-app-developer/articles/networking-overview.png"
+              height="500"
+            />
+          </section>
+          <section>
+            <h3>再來講一下 container 吧！</h3>
+          </section>
+          <section>
+            <p>在這些 Pod 中的 container 其實是用 docker 跑起來的</p>
+            <p>在 k8s 中預設的 docker image 是從 dockerHub 上面抓下來</p>
+          </section>
+          <section>
+            <p>當然也可以自己寫 Dockerfile 來建立 image</p>
+            <p>
+              不過就要加上一些設定讓 k8s 在建立 Pod 的時候優先以本地端的 image
+              為主
+            </p>
+            <pre><code class="hljs">imagePullPolicy: IfNotPresent</code></pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 service？</h3>
+          </section>
+          <section>
+            <p>在官網上是這樣說明的：</p>
+            <blockquote>
+              An abstract way to expose an application running on a set of Pods
+              as a network service.
+            </blockquote>
+          </section>
+          <section>
+            <p>
+              service
+              的存在就是建立一個網路連線通道讓應用程式可以正確地連結到正在運行的
+              Pods
+            </p>
+          </section>
+          <section>
+            <ul>
+              <li>
+                ClusterIP: 讓在同一個 cluster 中的其他服務可以透過這個 IP 訪問到
+                Pod
+              </li>
+              <li>
+                NodePort: 讓在不同的 cluster 中但是在同一台機器上的服務可以透過
+                NodePort 訪問到 Pod
+              </li>
+            </ul>
+          </section>
+          <section>
+            <p>加上 service 之後，目前 k8s 的流程圖會長這樣：</p>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pod-networking.png/700px-Pod-networking.png"
+              height="500"
+            />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Ingress？</h3>
+          </section>
+          <section>
+            <p>在官網上是這樣說明的</p>
+            <blockquote>
+              An API object that manages external access to the services in a
+              cluster, typically HTTP.
+            </blockquote>
+          </section>
+          <section>
+            <p>
+              Ingress 可以幫助我們統一一個對外的 port number，並且根據 hostname
+              或是 pathname 決定封包要轉發到哪個 Service 上
+            </p>
+          </section>
+          <section>
+            <ul>
+              <li>將不同路徑的請求對應到不同的 Service 物件</li>
+              <li>將不同 domain name 的請求對應到不同的 Service 物件</li>
+              <li>支援 SSL Termination</li>
+            </ul>
+          </section>
+          <section>
+            <p>再加上 Ingress 之後，目前 k8s 的流程圖會長這樣：</p>
+            <img
+              src="https://matthewpalmer.net/kubernetes-app-developer/articles/ingress.png"
+              height="500"
+            />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Secret？</h3>
+          </section>
+          <section>
+            <p>用來儲存 k8s 上的機密資料</p>
+            <p>例如使用者帳密、ssl等等</p>
+          </section>
+          <section>
+            <h3>Secret 的使用方式</h3>
+          </section>
+          <section>
+            <ul>
+              <li>將 Secret 當作環境變數</li>
+              <li>將建立好的 Secret file 掛載在某個 Pod 的路徑上</li>
+              <li>Secret 會將內部資料進行 base64 加密</li>
+            </ul>
+          </section>
+          <section>
+            <h3>如何建立 Secret？</h3>
+          </section>
+          <section>
+            <p>首先準備一份比較機密的資料，這邊用 tls 憑證做範例</p>
+          </section>
+          <section>
+            <p>
+              kubectl create secret generic secretName --from-file=file1Path
+              --from-file=file2Path
+            </p>
+            <img src="https://imgur.com/Rg6orY8.png" />
+          </section>
+          <section>
+            <p>kubectl get secrets</p>
+            <img src="https://imgur.com/DDVGv4s.png" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 ConfigMap？</h3>
+          </section>
+          <section>
+            <p>
+              相較於 Secret，ConfigMap
+              通常是用來存放比較不機密但偏向部署面的資料
+            </p>
+            <p>例如 nginx 設定、 DB IP 等等</p>
+          </section>
+          <section>
+            <h3>ConfigMap 特性</h3>
+          </section>
+          <section>
+            <ul>
+              <li>一個 ConfigMap 物件可以存入整個 configuration file</li>
+              <li>無需修改程式碼，可以替換不同環境的 Config</li>
+              <li>統一存放所有的 configuration</li>
+            </ul>
+          </section>
+          <section>
+            <h3>如何建立 ConfigMap？</h3>
+          </section>
+          <section>
+            <p>首先準備一份部署面的設定檔，這邊以 nginx 設定檔為範例</p>
+          </section>
+          <section>
+            <p>kubectl create configmap configName --from-file=filePath</p>
+            <img src="https://imgur.com/lFZsHVu.png" />
+          </section>
+          <section>
+            <p>kubectl get configmap</p>
+            <img src="https://imgur.com/9Ka6xnF.png" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Namespace？</h3>
+          </section>
+          <section>
+            <p>Namespace 就是抽象的 cluster</p>
+            <p>讓我們能根據專案不同，將原本擁有實體資源的單一 k8s cluster</p>
+            <p>劃分成幾個不同的 virtual cluster</p>
+          </section>
+          <section>
+            <h3>Namespace 特性</h3>
+          </section>
+          <section>
+            <ul>
+              <li>在同一個 cluster 中，每個 Namespace 的命名需要有獨特性</li>
+              <li>當一個 Namespace 被刪除時，內部的物件也會跟著被刪除</li>
+            </ul>
+          </section>
+        </section>
+        <section>
+          <section>
+            <p>下次分享會的主題會是 k8s 進階觀念</p>
+          </section>
+          <section>
+            <p>謝謝大家！</p>
+          </section>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  window.onload = () => {
+    Reveal.initialize({
+      dependencies: [
+        {
+          src:
+            'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/plugin/highlight/highlight.min.js',
+          async: true,
+        },
+      ],
+    })
+  }
+</script>
