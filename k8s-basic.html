@@ -54,6 +54,7 @@
             <li>Pod</li>
             <li>Service</li>
             <li>Ingress</li>
+            <li>Volumes</li>
             <li>Secret</li>
             <li>ConfigMap</li>
             <li>Namespace</li>
@@ -219,6 +220,54 @@
               src="https://matthewpalmer.net/kubernetes-app-developer/articles/ingress.png"
               height="500"
             />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Volumes？</h3>
+          </section>
+          <section>
+            <p>
+              Volumes 為 k8s cluster 用來儲存資料的地方，不但能將 container
+              的資料存下來，同時也能利用掛載(mounting) 的方式提供給其他 Pod 使用
+            </p>
+          </section>
+          <section>
+            <h3>Volumes 類型</h3>
+          </section>
+          <section>
+            <ul>
+              <li>emptyDir</li>
+              <li>hostPath</li>
+              <li>Cloud Storage</li>
+              <li>Network FileSystem(NFS)</li>
+            </ul>
+          </section>
+          <section>
+            <h3>emptyDir</h3>
+            <p>
+              當新增一個新的 Pod 的時候，k8s 就會在這個 Pod 新增一個 emptyDir
+              ，讓這個 Pod 內所有的 container 都可以存取這個 emptyDir ，當 Pod
+              被移除時，該 emptyDir 也會跟著被移除。
+            </p>
+          </section>
+          <section>
+            <h3>hostPath</h3>
+            <p>
+              在 Pod 物件上，掛載 Node 的資料夾或檔案，簡單來說就是直接把機器上的檔案掛載到
+              Pod 中
+            </p>
+          </section>
+          <section>
+            <h3>Cloud Storage</h3>
+            <p>
+              使用雲端硬碟的 Volumes ，常見的有 AWS EBS、Google Disk、Microsoft
+              Azure Disk
+            </p>
+          </section>
+          <section>
+            <h3>Network FileSystem</h3>
+            <p>利用 NFS 的原理存取同一個網域下的機器中的資料</p>
           </section>
         </section>
         <section>
