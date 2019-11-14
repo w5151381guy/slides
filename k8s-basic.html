@@ -52,6 +52,7 @@
           <ol>
             <li>前置作業</li>
             <li>Pod</li>
+            <li>Label</li>
             <li>Service</li>
             <li>Ingress</li>
             <li>Volumes</li>
@@ -150,6 +151,36 @@
               為主
             </p>
             <pre><code class="hljs">imagePullPolicy: IfNotPresent</code></pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Label？</h3>
+          </section>
+          <section>
+            <p>替 Pod 上標籤，讓這些 Pod 可以方便地被分類分群</p>
+          </section>
+          <section>
+            <p>
+              而 Label 就是一對具有辨識度的 key-value pair，所以可能會這樣寫
+            </p>
+            <pre>
+              <code class="hljs" data-trim>
+                labels:
+                  tier: frontend
+                  env: dev
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h3>什麼是 Annotation？</h3>
+          </section>
+          <section>
+            <p>
+              Labels
+              的一種，一樣提供識別用，只不過這個識別用是給開發人員看的，k8s
+              並不會採用此標籤
+            </p>
           </section>
         </section>
         <section>
@@ -381,10 +412,10 @@
       dependencies: [
         {
           src:
-            'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/plugin/highlight/highlight.min.js',
-          async: true,
-        },
-      ],
-    })
-  }
+            "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/plugin/highlight/highlight.min.js",
+          async: true
+        }
+      ]
+    });
+  };
 </script>
