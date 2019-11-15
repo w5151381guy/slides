@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>k8s-advanced</title>
+    <link
+      rel="shortcut icon"
+      href="https://miro.medium.com/max/7200/1*afkK1deEdJkuN3IhnzuzKg.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/lib/css/monokai.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/night.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/js/reveal.min.js"></script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <section>
+            <img
+              src="https://miro.medium.com/max/722/1*JLj6qvILdKWBFjt1sxE7rQ.jpeg"
+            />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>分享會大綱</h3>
+            <ol>
+              <li>kubelet 與 kube-proxy</li>
+              <li>Stateless 與 Stateful</li>
+              <li>Auto Scaling</li>
+              <li>Replication controller</li>
+              <li>Deployment</li>
+              <li>Replica sets</li>
+              <li>Ingress controller</li>
+              <li>Health check</li>
+              <li>Cronjob</li>
+            </ol>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 kubelet？</h3>
+          </section>
+          <section>
+            <p>
+              相當於 node agent，用於管理該 Node 上的所有 pods 狀態以及與 master
+              node 即時溝通
+            </p>
+          </section>
+          <section>
+            <h3>什麼是 kube-proxy？</h3>
+          </section>
+          <section>
+            <p>
+              將目前該 Node 上所有 Pods
+              的資訊傳給 iptables，讓 iptables 即時獲得在該 Node 上所有 Pod
+              的最新狀態，確保每個 Pod 都可以順利的互相溝通。
+            </p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Auto Scaling</h3>
+          </section>
+          <section>
+            <ul>
+              <li>水平擴展(Horizontal Scaling)</li>
+              <li>垂直擴展(Vertical Scaling)</li>
+            </ul>
+          </section>
+          <section>
+            <p>
+              Horizontal Scaling
+              就是新增更多的節點，獲取更多資源來分擔原有的工作內容
+            </p>
+            <p>在 k8s 中通常都是作 Pod 的 Horizontal Scaling</p>
+          </section>
+          <section>
+            <p>
+              Vertical Scaling 則是新增更多的 CPU 、 RAM 等等來獲得更多運作資源
+            </p>
+            <p>通常都要利用 gcp 、 aws 等等雲端服務才能實現</p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 stateless？</h3>
+          </section>
+          <section>
+            <p>
+              使用者透過瀏覽器向網站伺服提出的每一次請求（request）都是獨立的，彼此沒有相關的
+            </p>
+          </section>
+          <section>
+            <p>這樣的好處就是可以很輕易的擴充使用規模</p>
+          </section>
+          <section>
+            <h3>什麼是 stateful？</h3>
+          </section>
+          <section>
+            <p>
+              跟 stateless 相反， stateful
+              會紀錄每筆資料的狀態，像是資料庫等等都是 stateful application
+            </p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Replication controller？</h3>
+          </section>
+          <section>
+            <p>k8s 用來管理 Pod 數量以及狀態的 controller</p>
+          </section>
+          <section>
+            <h3>Replication controller 基本須知</h3>
+          </section>
+          <section>
+            <ul>
+              <li>每個 controller 都會有一個 yaml 檔</li>
+              <li>
+                controller 可以指定同時有多少個相同的Pods 要運行在 k8s cluster
+                上
+              </li>
+              <li>
+                一旦 Pod crash 或 failed 的時候，controller 會自動創建 Pod
+                以確保 Pod 運行數量與設定檔的相同
+              </li>
+              <li>
+                當機器重新啟動時，controller 也會自動被建立以確保 Pod 都順利運行
+              </li>
+            </ul>
+          </section>
+          <section>
+            <p>
+              由於要控制 Pod 因此會有一個 selector 的設定來決定要控制哪個
+              Pod，至於要如何媒合就需要寫 Label
+            </p>
+            <pre>
+              <code class="hljs" data-trim>
+                selector:
+                  app: frontend
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Deployment？</h3>
+          </section>
+          <section>
+            <p>其實在官網中 Replication controller 後面有這段文字</p>
+            <blockquote>
+              NOTE: A Deployment that configures a ReplicaSet is now the
+              recommended way to set up replication.
+            </blockquote>
+          </section>
+          <section>
+            <h3>使用 Deployment 有什麼好處？</h3>
+          </section>
+          <section>
+            <ul>
+              <li>部署一個應用服務</li>
+              <li>
+                在服務升級的過程中可以達到無停機服務遷移(zero downtime
+                deployment)
+              </li>
+              <li>可以 Rollback 到先前版本</li>
+            </ul>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 ReplicaSet？</h3>
+          </section>
+          <section>
+            <p>ReplicaSet 提供了比 Replication controller 更彈性的部屬方法</p>
+          </section>
+          <section>
+            <ul>
+              <li>matchLabels: Pod 的 Label 需與 matchLabels 完全相同</li>
+              <li>
+                matchExpressions: 更彈性的條件，每一筆條件主要由 key、
+                operator、value 組成
+              </li>
+            </ul>
+          </section>
+          <section>
+            <p>整體寫法就會像這樣</p>
+            <pre>
+              <code class="hljs" data-trim>
+                selector
+                  matchLabels:
+                    app: frontend
+                  matchExpressions:
+                    - {key: env, operator: In, values: [dev]}
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Ingress controller？</h3>
+          </section>
+          <section>
+            <p>為了方便控管該機器上所有 Ingress</p>
+          </section>
+          <section>
+            <p>除了管理 Ingress 外，還有一個更重要的功能就是做 Load Balancer</p>
+          </section>
+          <section>
+            <p>
+              其實 Ingress 本身是沒辦法做 Load Balancer 的，只能依靠像是 GCP 、
+              AWS 等雲端服務進行 Load Balancer
+            </p>
+          </section>
+          <section>
+            <p>
+              為了解決這種問題於是創造了 Ingress controller 來進行 Load Balancer
+            </p>
+            <p>Ingress controller 常用 GCE 或 Nginx 來實作</p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Health check？</h3>
+          </section>
+          <section>
+            <p>為了要確認 Pod 是否有順利運作</p>
+          </section>
+          <section>
+            <ul>
+              <li>定期的透過指令去訪問 container</li>
+              <li>定期發送一個 HTTP request 給 container (livenessProbe)</li>
+            </ul>
+          </section>
+          <section>
+            <ul>
+              <li>livenessProbe(存活探針)</li>
+              <li>readnessProbe(就緒探針)</li>
+            </ul>
+          </section>
+          <section>
+            <h3>livenessProbe</h3>
+            <p>
+              用於判斷 Pod 是否為 running 狀態，如果 livenessProbe
+              探測到容器不健康，則 kubelet 將砍掉 Pod 並重啟，如果該 Pod 不包含
+              livenessProbe，則 kubelet 認為該 Pod 的 livenessProbe
+              返回值永遠成功。
+            </p>
+          </section>
+          <section>
+            <h3>readnessProbe</h3>
+            <p>
+              用於判斷 Pod 是否啟動完成可以接收請求，如果 readinessProbe
+              失敗，則會將此 Pod 的 Endpoint 從對應的 service 的 Endpoint
+              列表中移除，從此不再將任何請求調度此Pod上，直到下次探測成功。
+            </p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Cronjob？</h3>
+          </section>
+          <section>
+            <p>k8s 用來進行任務排程，作用類似 linux 的 crontab</p>
+          </section>
+          <section>
+            <h3>cron 格式</h3>
+          </section>
+          <section>
+            <p>通常 cron 格式會長這樣：</p>
+            <pre>
+              <code class="hljs" data-trim>
+                * * * * *
+              </code>
+            </pre>
+          </section>
+          <section>
+            <ol>
+              <li>第一個星號代表分鐘(0 ~ 59)</li>
+              <li>第二個星號代表小時(0 ~ 23)</li>
+              <li>第三個星號代表日(1 ~ 31)</li>
+              <li>第四個星號代表月(1 ~ 12)</li>
+              <li>第五個星號代表星期(0 ~ 7，其中星期日可用 0 或 7 表示)</li>
+            </ol>
+          </section>
+          <section>
+            <p>假如今天要每三個小時做一次排程動作也可以這樣寫</p>
+            <pre>
+              <code class="hljs" data-trim>
+                * */3 * * * 
+
+                # */3 代表 0, 3, 6, 9, 12, 15, 18, 21
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <p>
+              下次分享會的主題是 k8s 實作，會教大家如何撰寫 yaml 檔以及架設網站
+            </p>
+          </section>
+          <section>
+            <p>謝謝大家！</p>
+          </section>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  window.onload = () => {
+    Reveal.initialize({
+      dependencies: [
+        {
+          src:
+            "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/plugin/highlight/highlight.min.js",
+          async: true
+        }
+      ]
+    });
+  };
+</script>
