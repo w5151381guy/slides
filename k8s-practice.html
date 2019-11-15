@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>k8s-practice</title>
+    <link
+      rel="shortcut icon"
+      href="https://miro.medium.com/max/7200/1*afkK1deEdJkuN3IhnzuzKg.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/lib/css/monokai.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/night.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/js/reveal.min.js"></script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <section>
+            <img
+              src="https://miro.medium.com/max/722/1*JLj6qvILdKWBFjt1sxE7rQ.jpeg"
+            />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>分享會大綱</h3>
+            <ol>
+              <li>實作前準備</li>
+              <li>Pod 設定</li>
+              <li>Deployment 設定</li>
+              <li>Service 設定</li>
+              <li>Ingress 設定</li>
+              <li>Ingress controller 設定</li>
+              <li>Health check 設定</li>
+              <li>Cronjob 設定</li>
+            </ol>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>實作前準備</h3>
+          </section>
+          <section>
+            <p>
+              這邊教大家最簡單且方便的架設方式，安裝 Google 在 vscode 上開發的
+              <a href="https://github.com/GoogleCloudPlatform/cloud-code-vscode"
+                >cloud code</a
+              >
+            </p>
+          </section>
+          <section>
+            <p>
+              之後再安裝
+              <a href="https://github.com/GoogleContainerTools/skaffold"
+                >skaffold</a
+              >
+            </p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>Pod 設定</h3>
+          </section>
+          <section>
+            <ul>
+              <li>apiVersion</li>
+              <li>metadata</li>
+              <li>kind</li>
+              <li>spec</li>
+            </ul>
+          </section>
+          <section>
+            <p>
+              apiVersion：目前 k8s 中該元件的版本號，必須要依照 server 上 k8s
+              的版本來進行設定。
+            </p>
+            <ul>
+              <li>1.6之前：extensions/v1beta1</li>
+              <li>1.6 ~ 1.9：apps/v1beta1</li>
+              <li>1.9以後：apps/v1</li>
+            </ul>
+          </section>
+          <section>
+            <p>metadata：</p>
+          </section>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  window.onload = () => {
+    Reveal.initialize({
+      dependencies: [
+        {
+          src:
+            "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/plugin/highlight/highlight.min.js",
+          async: true
+        }
+      ]
+    });
+  };
+</script>
