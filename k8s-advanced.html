@@ -161,10 +161,11 @@
             <h3>什麼是 Deployment？</h3>
           </section>
           <section>
-            <p>其實在官網中 Replication controller 後面有這段文字</p>
+            <p>在官網上是這樣說明的：</p>
             <blockquote>
-              NOTE: A Deployment that configures a ReplicaSet is now the
-              recommended way to set up replication.
+              a Deployment is a higher-level concept that manages ReplicaSets
+              and provides declarative updates to Pods along with a lot of other
+              useful features.
             </blockquote>
           </section>
           <section>
@@ -184,6 +185,13 @@
         <section>
           <section>
             <h3>什麼是 Replica Set？</h3>
+          </section>
+          <section>
+            <p>其實在官網中 Replication controller 後面有這段文字</p>
+            <blockquote>
+              NOTE: A Deployment that configures a ReplicaSet is now the
+              recommended way to set up replication.
+            </blockquote>
           </section>
           <section>
             <p>Replica Set 提供了比 Replication controller 更彈性的部屬方法</p>
@@ -208,6 +216,15 @@
                     - {key: env, operator: In, values: [dev]}
               </code>
             </pre>
+          </section>
+          <section>
+            <h3>為什麼要用 ReplicaSet 而不是 Replication controller？</h3>
+          </section>
+          <section>
+            <ul>
+              <li>Deployment 特性</li>
+              <li>彈性部署問題</li>
+            </ul>
           </section>
         </section>
         <section>
