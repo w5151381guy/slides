@@ -45,6 +45,7 @@
               <li>Deployment</li>
               <li>Replica sets</li>
               <li>Ingress controller</li>
+              <li>Resource Quotas</li>
               <li>Health check</li>
               <li>Cronjob</li>
             </ol>
@@ -248,6 +249,40 @@
               為了解決這種問題於是創造了 Ingress controller 來進行 Load Balancer
             </p>
             <p>Ingress controller 常用 GCE 或 Nginx 來實作</p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Resource Quotas?</h3>
+          </section>
+          <section>
+            <p>
+              每一個 container 都可以有屬於它自己的 resource request 與 resource
+              limit ，可以限制這個 Pod 的使用資源，避免單一 Pod 佔用 Node
+              太多資源
+            </p>
+          </section>
+          <section>
+            <ul>
+              <li>
+                resources.requests.cpu：此 Pod 最小需要多少 Node 的 cpu 資源
+              </li>
+              <li>
+                resources.limits.cpu：此 Pod 最多只能用到多少 Node 的 cpu 資源
+              </li>
+            </ul>
+          </section>
+          <section>
+            <p>
+              在 k8s 的 Resource Quotas 中會用 m(milicore)
+              這個單位來表示，舉例來說：400m 代表存取 40% 的資源
+            </p>
+          </section>
+          <section>
+            <p>
+              假如今天存取配置超過機器自身可提供，k8s 會回傳 403 FORBIDDEN
+              代表超出可使用的配置範圍
+            </p>
           </section>
         </section>
         <section>
