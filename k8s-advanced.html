@@ -24,6 +24,11 @@
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/js/reveal.min.js"></script>
   </head>
+  <style>
+    .reveal section li p {
+      font-size: 30px !important;
+    }
+  </style>
   <body>
     <div class="reveal">
       <div class="slides">
@@ -265,10 +270,12 @@
           <section>
             <ul>
               <li>
-                resources.requests.cpu：此 Pod 最小需要多少 Node 的 cpu 資源
+                <h4>resources.requests.cpu</h4>
+                <p>此 Pod 最小需要多少 Node 的 cpu 資源</p>
               </li>
               <li>
-                resources.limits.cpu：此 Pod 最多只能用到多少 Node 的 cpu 資源
+                <h4>resources.limits.cpu</h4>
+                <p>此 Pod 最多只能用到多少 Node 的 cpu 資源</p>
               </li>
             </ul>
           </section>
