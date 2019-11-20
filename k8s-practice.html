@@ -465,6 +465,9 @@
             </p>
           </section>
           <section>
+            <p>livenessProbe 與 readinessProbe 的設定方式一樣</p>
+          </section>
+          <section>
             <ul>
               <li>
                 <h4>livenessProbe.httpGet.path</h4>
@@ -492,7 +495,9 @@
               </li>
               <li>
                 <h4>livenessProbe.successThreshold</h4>
-                <p>設定訪問幾次而且都成功就代表 service 成功運行</p>
+                <p>
+                  設定訪問幾次而且都成功就代表 service 成功運行，預設為 1 次
+                </p>
               </li>
               <li>
                 <h4>livenessProbe.failureThreshold</h4>
@@ -508,28 +513,54 @@
               <code class="hljs" data-trim>
                 # . . . container settings
                 livenessProbe:
-                httpGet:
-                  path: /healthz
-                  scheme: HTTPS
-                  port: 8080
-                initialDelaySeconds: 3
-                periodSeconds: 60
-                successThreshold: 3
-                failureThreshold: 5
+                  httpGet:
+                    path: /healthz
+                    scheme: HTTPS
+                    port: 8080
+                  initialDelaySeconds: 3
+                  periodSeconds: 60
+                  successThreshold: 3
+                  failureThreshold: 5
+                readinessProbe:
+                  httpGet:
+                    path: /healthz
+                    scheme: HTTPS
+                    port: 8080
+                  initialDelaySeconds: 3
+                  periodSeconds: 60
+                  successThreshold: 3
+                  failureThreshold: 5
                 # . . . container settings
               </code>
             </pre>
-          </section>
-          <section>
-            <ul>
-              <li>readnessProbe</li>
-            </ul>
           </section>
         </section>
         <section>
           <section>
             <h3>Cronjob 設定</h3>
           </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                apiVersion: batch/v1beta1
+                kind: Cronjob
+                spec:
+                  schedules: 需輸入符合 cron 格式的字串
+                  jobTemplate:
+                    spec:
+                      template:
+                         spec:
+                            containers:
+                              - name: cornjob 名稱
+                                image: 排程映像檔
+                                command: [‘node’,’index.js’]  -> node index.js  
+                            restartPolicy: 重啟設定(always, onFailure, Never)
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <p>謝謝大家</p>
         </section>
       </div>
     </div>
