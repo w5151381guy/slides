@@ -24,6 +24,14 @@
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/js/reveal.min.js"></script>
   </head>
+  <style>
+    .reveal section li p {
+      font-size: 30px !important;
+    }
+    code {
+      max-height: none !important;
+    }
+  </style>
   <body>
     <div class="reveal">
       <div class="slides">
@@ -40,6 +48,8 @@
             <ol>
               <li>實作前準備</li>
               <li>Pod 設定</li>
+              <li>Secret 以及 ConfigMap 掛載</li>
+              <li>Replication controller 設定</li>
               <li>Deployment 設定</li>
               <li>Service 設定</li>
               <li>Ingress 設定</li>
@@ -76,17 +86,33 @@
           </section>
           <section>
             <ul>
-              <li>apiVersion</li>
-              <li>metadata</li>
-              <li>kind</li>
-              <li>spec</li>
+              <li>
+                <h4>apiVersion</h4>
+                <p>
+                  目前 k8s 中該元件的版本號，必須要依照 server 上 k8s
+                  的版本來進行設定。
+                </p>
+              </li>
+              <li>
+                <h4>metadata</h4>
+                <p>用來擺放描述性資料的地方</p>
+              </li>
+              <li>
+                <h4>kind</h4>
+                <p>
+                  用來決定此設定檔的類型
+                </p>
+              </li>
+              <li>
+                <h4>spec</h4>
+                <p>
+                  用來描述物件被生成的細節
+                </p>
+              </li>
             </ul>
           </section>
           <section>
-            <p>
-              apiVersion：目前 k8s 中該元件的版本號，必須要依照 server 上 k8s
-              的版本來進行設定。
-            </p>
+            <h4>apiVersion 的分法</h4>
             <ul>
               <li>1.6之前：extensions/v1beta1</li>
               <li>1.6 ~ 1.9：apps/v1beta1</li>
@@ -94,7 +120,415 @@
             </ul>
           </section>
           <section>
-            <p>metadata：</p>
+            <h4>spec 的細部寫法</h4>
+            <ul>
+              <li>
+                <h4>spec.container.name</h4>
+                <p>container 名稱</p>
+              </li>
+              <li>
+                <h4>spec.container.image</h4>
+                <p>container 的 image</p>
+              </li>
+              <li>
+                <h4>spec.container.port</h4>
+                <p>container 的對外 port</p>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                apiVersion: v1
+                kind: Pod
+                metadata:
+                  name: my-pod
+                  labels:
+                    app: my-Pod
+                spec:
+                  containers:
+                  - name: my-Pod
+                    image: demoImage
+                    ports:
+                    - containerPort: 3000
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>Secret 與 ConfigMap 掛載</h3>
+          </section>
+          <section>
+            <p>這邊要用到 volumes 的觀念來進行掛載</p>
+          </section>
+          <section>
+            <ul>
+              <li>
+                <h4>containers.volumeMounts.name</h4>
+                <p>要掛載在 container 中的名稱</p>
+              </li>
+              <li>
+                <h4>containers.volumeMounts.mountPath</h4>
+                <p>選擇要掛載在 container 中的哪個 path 上</p>
+              </li>
+              <li>
+                <h4>containers.volumeMounts.subpath</h4>
+                <p>
+                  有時候我們要掛載的目錄中可能包含了多個子目錄，而這些子目錄恰巧又分別被多個不同的
+                  container 使用，此時就可以透過 subPath 的方式來簡化 volume
+                  的設定
+                </p>
+              </li>
+              <li>
+                <h4>spec.volumes.name</h4>
+                <p>從外部掛載進來的名稱</p>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                spec:
+                  containers:
+                  - name: my-Pod
+                    image: demoImage
+                    ports:
+                    - containerPort: 3000
+                    volumeMounts:
+                    - name: nginx-secret
+                      mountPath: /etc/nginx/ssl
+                    - name: pod-config
+                      mountPath: /etc/nginx/conf.d
+                      readOnly: true
+                  volumes:
+                    - name: pod-config
+                      configMap:
+                        name: pod-config
+                    - name: nginx-secret
+                      secret:
+                        secretName: nginx-secret
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>Replication controller 設定</h3>
+          </section>
+          <section>
+            <ul>
+              <li>
+                <h4>spec.replicas</h4>
+                <p>設定 Pod 的數量</p>
+              </li>
+              <li>
+                <h4>spec.selector</h4>
+                <p>選擇 Pod 的條件</p>
+              </li>
+              <li>
+                <h4>spec.template</h4>
+                <p>定義 Pod 的資訊，上述提到的 Pod 寫法都會擺在這</p>
+              </li>
+              <li>
+                <h4>spec.template.metadata</h4>
+                <p>定義 Pod 的描述資訊</p>
+              </li>
+              <li>
+                <h4>spec.template.spec</h4>
+                <p>定義 Pod 內的 container 資訊</p>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                apiVersion: v1
+                kind: ReplicationController
+                metadata:
+                  name: demoReplicationController
+                spec:
+                  replicas: 2
+                  selector:
+                    app: my-Pod
+                  template:
+                    metadata:
+                      labels:
+                        app: my-Pod
+                    spec:
+                      containers:
+                      - name: my-pod
+                        image: demoImage
+                        ports:
+                        - containerPort: 3000
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>Deployment 設定</h3>
+          </section>
+          <section>
+            <h3>strategy</h3>
+            <p>
+              k8s 為了確保在 rollout(滾動更新)
+              時可以按照想要的方式進行更新，只要是 Deployment 在 spec 中都會有
+              strategy 的設定值
+            </p>
+          </section>
+          <section>
+            <ul>
+              <li>
+                <h4>strategy.type</h4>
+                <p>
+                  設定 rollout type，有 Recreate 以及 RollingUpdate
+                  兩種，default 為 RollingUpdate
+                </p>
+              </li>
+              <li>
+                <h4>strategy.rollingUpdate.maxSurge</h4>
+                <p>在 rollout 的過程中最多可以比原本設定的 Pod 數量多出多少</p>
+              </li>
+              <li>
+                <h4>strategy.rollingUpdate.maxUnavailable</h4>
+                <p>
+                  在 rollout 的過程中，可以允許多少個 Pod 無法使用，假如
+                  MaxSurge 設定非 0，maxUnavailable 也不能設定非 0
+                </p>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: demoDeployment
+                spec:
+                  replicas: 2
+                  strategy:
+                    type: RollingUpdate
+                    rollingUpdate:
+                      maxSurge: 1
+                      maxUnavailable: 1
+                  selector:
+                    matchLabels:
+                      app: my-deployment
+                  template:
+                    # . . . pod settings
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>Service 設定</h3>
+          </section>
+          <section>
+            <ul>
+              <li>
+                <h4>spec.ports.port</h4>
+                <p>
+                  指定 service 建立完的 clusterIP 中哪個 port 要對應到
+                  targetPort
+                </p>
+              </li>
+              <li>
+                <h4>spec.ports.nodePort</h4>
+                <p>
+                  可以指定 Node 中哪個 Port 要對應到 targetPort ，沒設定的話 k8s
+                  會隨機挑選一個 Port
+                </p>
+              </li>
+              <li>
+                <h4>spec.ports.targetPort</h4>
+                <p>指定要相對應 Pod 的 Port，targetPort 會跟 port 相同</p>
+              </li>
+              <li>
+                <h4>spec.ports.protocol</h4>
+                <p>使用 TCP 或 UDP， default 是 TCP</p>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                apiVersion: v1
+                kind: Service
+                metadata:
+                  name: my-service
+                  labels:
+                    app: my-service
+                spec:
+                  ports:
+                    - protocol: TCP
+                      port: 3000
+                      targetPort: 3000
+                  selector:
+                    app: my-service
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>Ingress 設定</h3>
+          </section>
+          <section>
+            <ul>
+              <li>
+                <h4>spec.tls.secretName</h4>
+                <p>要提供給網站用的 tls secret 名稱</p>
+              </li>
+              <li>
+                <h4>spec.rules.host</h4>
+                <p>網站的 domain name</p>
+              </li>
+              <li>
+                <h4>spec.rules.http.paths.path</h4>
+                <p>經由哪個 path 來連接到 service</p>
+              </li>
+              <li>
+                <h4>spec.rules.http.paths.backend.serviceName</h4>
+                <p>欲連接到的 service 名稱</p>
+              </li>
+              <li>
+                <h4>spec.rules.http.paths.backend.servicePort</h4>
+                <p>欲連接到的 service 對外port</p>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <section>
+              <pre>
+                <code class="hljs" data-trim>
+                  apiVersion: extensions/v1beta1
+                  kind: Ingress
+                  metadata:
+                    name: my-ingress
+                  spec:
+                    tls:
+                      - secretName: nginx-secret
+                    rules:
+                      - host: mysite.com.tw
+                        http:
+                          paths:
+                            - path: /
+                              backend:
+                                serviceName: my-service
+                                servicePort: 3000
+                </code>
+              </pre>
+            </section>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>Ingress controller 設定</h3>
+          </section>
+          <section>
+            <p>
+              點擊 ingress-nginx 中
+              <a
+                href="https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/index.md"
+                >deploy</a
+              >
+              頁面進行初始化安裝
+            </p>
+          </section>
+          <section>
+            <p>這邊有一個一定要安裝的描述檔，不論是架在本地端或是雲端都需要</p>
+            <img src="https://imgur.com/6ZPaOK5.png" />
+          </section>
+          <section>
+            <h3>使用 ingress-nginx 好處</h3>
+          </section>
+          <section>
+            <p>ingress-nginx 會自動幫我們建立好的 ingress 進行統整的動作</p>
+            <p>統整過後的 ingress 都會擺在 nginx.conf 內</p>
+          </section>
+          <section>
+            <p>kubecl exec -n ingress-nginx -ti podName -- /bin/sh</p>
+            <img src="https://imgur.com/jJCY17u.png" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>Health check 設定</h3>
+          </section>
+          <section>
+            <p>
+              由於 Health check 是要檢查 Pod 的健康狀態，因此 Health check
+              會寫在 Pod 或 Deployment 的設定檔內
+            </p>
+          </section>
+          <section>
+            <ul>
+              <li>
+                <h4>livenessProbe.httpGet.path</h4>
+                <p>設定 health check 要造訪的路徑</p>
+              </li>
+              <li>
+                <h4>livenessProbe.httpGet.scheme</h4>
+                <p>設定要造訪的 scheme，預設為 HTTP 也可設定為 HTTPS</p>
+              </li>
+              <li>
+                <h4>livenessProbe.httpGet.port</h4>
+                <p>設定要造訪的 port</p>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <ul>
+              <li>
+                <h4>livenessProbe.initialDelaySeconds</h4>
+                <p>設定 service 剛啟動時要間隔多久再啟動 health check</p>
+              </li>
+              <li>
+                <h4>livenessProbe.periodSeconds</h4>
+                <p>每多久訪問一次，預設為 10s</p>
+              </li>
+              <li>
+                <h4>livenessProbe.successThreshold</h4>
+                <p>設定訪問幾次而且都成功就代表 service 成功運行</p>
+              </li>
+              <li>
+                <h4>livenessProbe.failureThreshold</h4>
+                <p>
+                  代表 service 回傳不如預期時，在 kubelet 放棄此 container
+                  之前會在嘗試的次數，預設為3次
+                </p>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                # . . . container settings
+                livenessProbe:
+                httpGet:
+                  path: /healthz
+                  scheme: HTTPS
+                  port: 8080
+                initialDelaySeconds: 3
+                periodSeconds: 60
+                successThreshold: 3
+                failureThreshold: 5
+                # . . . container settings
+              </code>
+            </pre>
+          </section>
+          <section>
+            <ul>
+              <li>readnessProbe</li>
+            </ul>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>Cronjob 設定</h3>
           </section>
         </section>
       </div>
