@@ -139,7 +139,7 @@
           <section>
             <pre>
               <code class="hljs" data-trim>
-                apiVersion: v1
+                apiVersion: apps/v1
                 kind: Pod
                 metadata:
                   name: my-pod
@@ -367,7 +367,7 @@
                       port: 3000
                       targetPort: 3000
                   selector:
-                    app: my-service
+                    app: my-Pod
               </code>
             </pre>
           </section>
@@ -450,7 +450,7 @@
             <p>統整過後的 ingress 都會擺在 nginx.conf 內</p>
           </section>
           <section>
-            <p>kubecl exec -n ingress-nginx -ti podName -- /bin/sh</p>
+            <p>kubectl exec -n ingress-nginx -ti podName -- /bin/sh</p>
             <img src="https://imgur.com/jJCY17u.png" />
           </section>
         </section>
