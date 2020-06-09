@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>JS Slides</title>
+    <link
+      rel="shortcut icon"
+      href="https://vector.cool/wp-content/uploads/2019/10/Javascript-shield.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/lib/css/monokai.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/night.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/js/reveal.min.js"></script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <section>
+            <h3>幾個 JavaScript 有趣的冷知識</h3>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>分享會大綱：</h3>
+            <ol>
+              <li>JavaScript 中的 NaN</li>
+              <li>印出 banana</li>
+              <li>JavaScript 中 == 與 === 的差別</li>
+              <li>if(a == 1 && a == 2 && a == 3) 為 true</li>
+              <li>JavaScript 的比大小</li>
+            </ol>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>JavaScript 中的 NaN</h3>
+          </section>
+          <section>
+            <p>Nan 全名為：Not a Number</p>
+          </section>
+          <section>
+            <h3>猜猜底下的程式碼會回傳什麼？</h3>
+            <pre>
+              <code class="hljs" data-trim>
+                typeof NaN
+              </code>
+            </pre>
+          </section>
+          <section>
+            <p>答案是：</p>
+            <img src="https://imgur.com/VIRbwmU.png" height="200" />
+          </section>
+          <section>
+            <p>
+              所以 NaN 在 JavaScript 中就是個介在是數字與不是數字之間
+            </p>
+            <p>也就是薛丁格的數字XD</p>
+          </section>
+          <section>
+            <h3>猜猜看底下會回傳 true 或 false</h3>
+            <pre>
+              <code class="hljs" data-trim>
+                NaN === NaN
+              </code>
+            </pre>
+          </section>
+          <section>
+            <p>答案是：</p>
+            <img src="https://imgur.com/38Fzdep.png" height="200" />
+          </section>
+          <section>
+            <p>其實 JS 自己就有定義了</p>
+            <img src="https://imgur.com/ZcZsH2b.png" height="300" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>印出 banana</h3>
+          </section>
+          <section>
+            <img src="https://imgur.com/9HRXcrC.png" height="400" />
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                console.log('banana')  // banana
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h4>這邊要套用一下剛剛提到的 NaN 的觀念</h4>
+          </section>
+          <section>
+            <p>其實 JS 可以用旁門左道印出 banana</p>
+            <pre>
+              <code class="hljs" data-trim>
+                console.log(('b' + 'a' + + 'a' + 'a').toLowerCase())  
+                // banana
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h3>為什麼會這樣呢？</h3>
+          </section>
+          <section>
+            <ol>
+              <li>
+                JS 在判斷的過程中，會把
+                <b>+ 'a'</b> 當作是一個要被加入的東西
+              </li>
+              <li>
+                而 JS 並不知道 + 'a' 是什麼東西所以就會回傳 NaN
+              </li>
+              <li>這時候我們用字串加起來所以就會變成 baNaNa</li>
+              <li>
+                所以把剛剛的 baNaNa 轉成小寫就變成 banana 啦
+              </li>
+            </ol>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>JavaScript 中 == 與 === 的差別</h3>
+          </section>
+          <section>
+            <p>很多人都以為 == 與 === 的差別在於有沒有做型別檢查</p>
+            <p>但真的是這樣嗎？</p>
+          </section>
+          <section>
+            <img src="https://imgur.com/tAjpSfD.png" height="500" />
+          </section>
+          <section>
+            <img src="https://imgur.com/ZcZsH2b.png" height="500" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>if(a == 1 && a == 2 && a == 3) 為 true</h3>
+          </section>
+          <section>
+            <h3>JavaScript 的原型污染</h3>
+          </section>
+          <section>
+            <p>JavaScript 是個弱型別語言，所以會進行自動轉型的動作</p>
+          </section>
+          <section>
+            <p>
+              在物件中，物件優先取值使用的是 valueOf() 這個 method，若沒有
+              valueOf() 則用 toString()
+            </p>
+          </section>
+          <section>
+            <p>所以我今天可以這樣寫：</p>
+            <pre>
+              <code class="hljs" data-trim>
+                const a = { 
+                  value: 0,
+                  valueOf: function() {
+                    return this.value += 1
+                  }
+                }
+                console.log(a == 1 && a == 2 && a == 3)  // true
+              </code>
+            </pre>
+          </section>
+          <section>
+            <p>這時候你可能會這樣想</p>
+          </section>
+          <section>
+            <p>那我就直接把 == 改成 === 就行啦</p>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                const a = { 
+                  value: 0,
+                  valueOf: function() {
+                    return this.value += 1
+                  }
+                }
+                console.log(a === 1 && a === 2 && a === 3)  // false
+              </code>
+            </pre>
+          </section>
+          <section>
+            <p>
+              的確因為 === 會優先進行型別的比較，不會先轉型，所以這邊的 a 其實是
+              { value: 1, valueOf: func() }
+            </p>
+          </section>
+          <section>
+            <p>所以 a === 1 就永遠會是 false</p>
+          </section>
+          <section>
+            <img
+              src="https://pic.pimg.tw/austinleefuture/1407855269-3468237844_n.jpg"
+              height="500"
+            />
+          </section>
+          <section>
+            <p>
+              JavaScript 提供了 defineProperty 的函數，裡面有一個 get() 的
+              method，這時候在裡面修改 get() 又會得到一樣的結果了
+            </p>
+          </section>
+          <section>
+            <p>這個方法比較複雜一點，需要用全域變數的方式來處理</p>
+            <pre>
+              <code class="hljs" data-trim>
+                window value = 0
+                Object.defineProperty(window, 'a', {
+                    get: function() {
+                        return this.value += 1
+                    }
+                })
+                console.log(a===1 && a===2 && a===3) // true
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>JavaScript 的比大小</h3>
+          </section>
+          <section>
+            <p>2 + 3 * 3 = ?</p>
+          </section>
+          <section>
+            <p>6 / 2 * 3 = 9 or 1 ?</p>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                console.log(10 < 100)
+              </code>
+            </pre>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                console.log(1 < 10 < 100)
+              </code>
+            </pre>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                console.log(100 < 10 < 1)
+              </code>
+            </pre>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                console.log(1 < 10 < 100) => console.log(true < 100)
+              </code>
+            </pre>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                console.log(true < 100) => console.log(1 < 100)
+              </code>
+            </pre>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                console.log(100 < 10 < 1) => console.log(false < 1)
+              </code>
+            </pre>
+          </section>
+          <section>
+            <pre>
+              <code class="hljs" data-trim>
+                console.log(false < 1) => console.log(0 < 1)
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <p>以上就是今天的分享會</p>
+            <p>謝謝大家</p>
+          </section>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  window.onload = () => {
+    Reveal.initialize({
+      dependencies: [
+        {
+          src:
+            'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/plugin/highlight/highlight.min.js',
+          async: true
+        }
+      ]
+    })
+  }
+</script>
