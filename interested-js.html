@@ -220,7 +220,7 @@
             <p>這個方法比較複雜一點，需要用全域變數的方式來處理</p>
             <pre>
               <code class="hljs" data-trim>
-                window value = 0
+                window.value = 0
                 Object.defineProperty(window, 'a', {
                     get: function() {
                         return this.value += 1
