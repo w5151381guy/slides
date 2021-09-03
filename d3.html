@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>D3.js</title>
+    <link
+      rel="shortcut icon"
+      href="https://smlpoints.com/wp-content/uploads/notes-typescript-d3-js-vue-3-start-and-draw-bar-chart-1.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/lib/css/monokai.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/night.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/js/reveal.min.js"></script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <img src="https://shawnlin0201.github.io/images/d3js/d3.png" />
+        </section>
+        <section>
+          <h3>分享會大綱</h3>
+          <ol>
+            <li>D3 基本介紹</li>
+            <li>scale and range</li>
+            <li>domain and endpoint</li>
+            <li>time format and number format</li>
+            <li>select, append, and attr</li>
+            <li>data</li>
+            <li>Axis</li>
+            <li>chart event and tooltip</li>
+            <li>transform</li>
+            <li>DEMO</li>
+          </ol>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 D3.js</h3>
+          </section>
+          <section>
+            <p>
+              D3.js 是一套使用動態圖形進行資料視覺化的 JavaScript 函式庫，透過
+              D3 的細部設定可以讓工程師設計各種圖表，在 D3 官網中的
+              <a
+                href="https://github.com/d3/d3/wiki/Gallery"
+                target="_blank"
+                rel="noopener nofollow noreferrer"
+                >Gallery</a
+              >
+              可以看各種神人設計出來的圖表。
+            </p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>scale and range</h3>
+          </section>
+          <section>
+            <p>
+              scale
+              可以想像成比例尺的概念，比例尺就是為了讓我們能在有限的空間內顯示完整的內容，其實很多圖表都會有比例尺，像
+              google map 底下就會有個比例尺方便使用者進行畫面的調整。
+            </p>
+          </section>
+          <section>
+            <img src="https://imgur.com/pIONWYl.gif" />
+          </section>
+          <section>
+            <p>
+              所以在使用 D3
+              開始繪製圖表前我們必須要先定義圖表的比例，這樣圖表才會依照我們想要的方式顯示出來，如果不定義比例的話隨便一張圖表應該都會超過網頁能顯示的範圍了XD
+            </p>
+          </section>
+          <section>
+            <p>
+              D3
+              的比例尺有非常多的設定方式，以下會用最常用的兩種比例尺來做說明，想了解更多其他的比例尺可以參考這個<a
+                href="https://github.com/d3/d3-scale"
+                target="_blank"
+                rel="noopener nofollow noreferrer"
+                >網站</a
+              >。
+            </p>
+          </section>
+          <section>
+            <h4>d3.scaleBand()</h4>
+            <p>
+              非連續性的比例尺，適用於非連續性質的資料，舉例來說：性別分為男、女，兩者是沒有連續性的是獨立的這種就適用於非連續性的比例尺。
+            </p>
+          </section>
+          <section>
+            <h4>d3.scaleLinear()</h4>
+            <p>
+              連續性的比例尺，適用於連續性質的資料，舉例來說：時間、數值等等每個時間或數字其實都可以經過一些算法而找到彼此的關聯性，這種就是連續性的資料就適用於連續性的比例尺。
+            </p>
+          </section>
+          <section>
+            <p>
+              簡單小總結一下，當你的資料是無法利用一套計算方法找到彼此關聯性的，像是男生無法經由計算得到女生，這種就是非連續性的資料，反之可以利用一些計算方法找到關聯性的，像是數字與數字之間可以用減法找到關聯性，這種就是連續性的資料。
+            </p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Pod？</h3>
+          </section>
+          <section>
+            <p>在官網上是這樣說明的</p>
+            <blockquote>
+              Pods are the smallest deployable units of computing that can be
+              created and managed in Kubernetes.
+            </blockquote>
+          </section>
+          <section>
+            <p>簡單來說 Pod 就是 k8s 中可以執行的最小單位</p>
+          </section>
+          <section>
+            <p>
+              由於 Pod 只是一個可以被執行的最小單位，可想而知在一個 Pod
+              內一定有能被執行的內容
+            </p>
+            <p>這些可以被執行內容的我們稱之為 container</p>
+          </section>
+          <section>
+            <p>簡單來說 Pod 的架構圖會長這樣：</p>
+            <img
+              src="https://matthewpalmer.net/kubernetes-app-developer/articles/networking-overview.png"
+              height="500"
+            />
+          </section>
+          <section>
+            <h3>再來講一下 container 吧！</h3>
+          </section>
+          <section>
+            <p>在這些 Pod 中的 container 其實是用 docker 跑起來的</p>
+            <p>在 k8s 中預設的 docker image 是從 dockerHub 上面抓下來</p>
+          </section>
+          <section>
+            <p>當然也可以自己寫 Dockerfile 來建立 image</p>
+            <p>
+              不過就要加上一些設定讓 k8s 在建立 Pod 的時候優先以本地端的 image
+              為主
+            </p>
+            <pre><code class="hljs">imagePullPolicy: IfNotPresent</code></pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Label？</h3>
+          </section>
+          <section>
+            <p>替 Pod 上標籤，讓這些 Pod 可以方便地被分類分群</p>
+          </section>
+          <section>
+            <p>
+              而 Label 就是一對具有辨識度的 key-value pair，所以可能會這樣寫
+            </p>
+            <pre>
+              <code class="hljs" data-trim>
+                labels:
+                  tier: frontend
+                  env: dev
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h3>什麼是 Annotation？</h3>
+          </section>
+          <section>
+            <p>
+              Labels
+              的一種，一樣提供識別用，只不過這個識別用是給開發人員看的，k8s
+              並不會採用此標籤
+            </p>
+            <pre>
+              <code class="hljs" data-trim>
+                annotations:
+                  version: latest
+                  contact: andychen@koodata.com.tw
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 service？</h3>
+          </section>
+          <section>
+            <p>在官網上是這樣說明的：</p>
+            <blockquote>
+              An abstract way to expose an application running on a set of Pods
+              as a network service.
+            </blockquote>
+          </section>
+          <section>
+            <p>
+              service
+              的存在就是建立一個網路連線通道讓應用程式可以正確地連結到正在運行的
+              Pods
+            </p>
+          </section>
+          <section>
+            <ul>
+              <li>
+                ClusterIP: 讓在同一個 cluster 中的其他服務可以透過這個 IP 訪問到
+                Pod
+              </li>
+              <li>
+                NodePort: 讓在不同的 cluster 中的服務可以透過 NodePort 訪問到
+                Pod
+              </li>
+            </ul>
+          </section>
+          <section>
+            <p>加上 service 之後，目前 k8s 的流程圖會長這樣：</p>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pod-networking.png/700px-Pod-networking.png"
+              height="500"
+            />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Ingress？</h3>
+          </section>
+          <section>
+            <p>在官網上是這樣說明的</p>
+            <blockquote>
+              An API object that manages external access to the services in a
+              cluster, typically HTTP.
+            </blockquote>
+          </section>
+          <section>
+            <p>
+              Ingress 可以幫助我們統一一個對外的 port number，並且根據 hostname
+              或是 pathname 決定封包要轉發到哪個 Service 上
+            </p>
+          </section>
+          <section>
+            <ul>
+              <li>將不同路徑的請求對應到不同的 Service 物件</li>
+              <li>將不同 domain name 的請求對應到不同的 Service 物件</li>
+              <li>支援 SSL Termination</li>
+            </ul>
+          </section>
+          <section>
+            <p>再加上 Ingress 之後，目前 k8s 的流程圖會長這樣：</p>
+            <img
+              src="https://matthewpalmer.net/kubernetes-app-developer/articles/ingress.png"
+              height="500"
+            />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Volumes？</h3>
+          </section>
+          <section>
+            <p>
+              Volumes 為 k8s cluster 用來儲存資料的地方，不但能將 container
+              的資料存下來，同時也能利用掛載(mounting) 的方式提供給其他 Pod 使用
+            </p>
+          </section>
+          <section>
+            <h3>Volumes 類型</h3>
+          </section>
+          <section>
+            <ul>
+              <li>emptyDir</li>
+              <li>hostPath</li>
+              <li>Cloud Storage</li>
+              <li>Network FileSystem(NFS)</li>
+            </ul>
+          </section>
+          <section>
+            <h3>emptyDir</h3>
+            <p>
+              當新增一個新的 Pod 的時候，k8s 就會在這個 Pod 新增一個 emptyDir
+              ，讓這個 Pod 內所有的 container 都可以存取這個 emptyDir ，當 Pod
+              被移除時，該 emptyDir 也會跟著被移除。
+            </p>
+          </section>
+          <section>
+            <h3>hostPath</h3>
+            <p>
+              在 Pod 物件上，掛載 Node 的資料夾或檔案，簡單來說就是直接把機器上的檔案掛載到
+              Pod 中
+            </p>
+          </section>
+          <section>
+            <h3>Cloud Storage</h3>
+            <p>
+              使用雲端硬碟的 Volumes ，常見的有 AWS EBS、Google Disk、Microsoft
+              Azure Disk
+            </p>
+          </section>
+          <section>
+            <h3>Network FileSystem</h3>
+            <p>利用 NFS 的原理存取同一個網域下的機器中的資料</p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Secret？</h3>
+          </section>
+          <section>
+            <p>用來儲存 k8s 上的機密資料</p>
+            <p>例如使用者帳密、ssl等等</p>
+          </section>
+          <section>
+            <h3>Secret 的使用方式</h3>
+          </section>
+          <section>
+            <ul>
+              <li>將 Secret 當作環境變數</li>
+              <li>將建立好的 Secret file 掛載在某個 Pod 的路徑上</li>
+              <li>Secret 會將內部資料進行 base64 加密</li>
+            </ul>
+          </section>
+          <section>
+            <h3>如何建立 Secret？</h3>
+          </section>
+          <section>
+            <p>首先準備一份比較機密的資料，這邊用 tls 憑證做範例</p>
+          </section>
+          <section>
+            <p>
+              kubectl create secret generic secretName --from-file=file1Path
+              --from-file=file2Path
+            </p>
+            <img src="https://imgur.com/Rg6orY8.png" />
+          </section>
+          <section>
+            <p>kubectl get secret</p>
+            <img src="https://imgur.com/DDVGv4s.png" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 ConfigMap？</h3>
+          </section>
+          <section>
+            <p>
+              相較於 Secret，ConfigMap
+              通常是用來存放比較不機密但偏向部署面的資料
+            </p>
+            <p>例如 nginx 設定、 DB IP 等等</p>
+          </section>
+          <section>
+            <h3>ConfigMap 特性</h3>
+          </section>
+          <section>
+            <ul>
+              <li>一個 ConfigMap 物件可以存入整個 configuration file</li>
+              <li>無需修改程式碼，可以替換不同環境的 Config</li>
+              <li>統一存放所有的 configuration</li>
+            </ul>
+          </section>
+          <section>
+            <h3>如何建立 ConfigMap？</h3>
+          </section>
+          <section>
+            <p>首先準備一份部署面的設定檔，這邊以 nginx 設定檔為範例</p>
+          </section>
+          <section>
+            <p>kubectl create configmap configName --from-file=filePath</p>
+            <img src="https://imgur.com/lFZsHVu.png" />
+          </section>
+          <section>
+            <p>kubectl get configmap</p>
+            <img src="https://imgur.com/9Ka6xnF.png" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>什麼是 Namespace？</h3>
+          </section>
+          <section>
+            <p>Namespace 就是抽象的 cluster</p>
+            <p>讓我們能根據專案不同，將原本擁有實體資源的單一 k8s cluster</p>
+            <p>劃分成幾個不同的 virtual cluster</p>
+            <p>預設所有建立的 Pod 都會擺放在 default 這個 Namespace</p>
+          </section>
+          <section>
+            <h3>Namespace 特性</h3>
+          </section>
+          <section>
+            <ul>
+              <li>在同一個 cluster 中，每個 Namespace 的命名需要有獨特性</li>
+              <li>當一個 Namespace 被刪除時，內部的物件也會跟著被刪除</li>
+            </ul>
+          </section>
+        </section>
+        <section>
+          <section>
+            <p>下次分享會的主題會是 k8s 進階觀念</p>
+          </section>
+          <section>
+            <p>謝謝大家！</p>
+          </section>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  window.onload = () => {
+    Reveal.initialize({
+      dependencies: [
+        {
+          src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/plugin/highlight/highlight.min.js',
+          async: true,
+        },
+      ],
+    });
+  };
+</script>
