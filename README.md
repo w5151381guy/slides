@@ -13,3 +13,5 @@
 - #### [k8s（實作篇）](https://w5151381guy.github.io/slides/k8s-practice.html)
 
 - #### [JavaScript 有趣的冷知識](https://w5151381guy.github.io/slides/interested-js.html)
+
+- #### [React + D3 的正確姿勢](https://w5151381guy.github.io/slides/d3.html)
