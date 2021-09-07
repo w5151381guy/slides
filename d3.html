@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>D3.js</title>
+    <title>React + D3.js 的正確姿勢</title>
     <link
       rel="shortcut icon"
       href="https://smlpoints.com/wp-content/uploads/notes-typescript-d3-js-vue-3-start-and-draw-bar-chart-1.png"
@@ -28,7 +28,18 @@
     <div class="reveal">
       <div class="slides">
         <section>
-          <img src="https://shawnlin0201.github.io/images/d3js/d3.png" />
+          <h4>
+            <a
+              href="https://ithelp.ithome.com.tw/users/20111948/ironman/2837"
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              >React + D3 的正確姿勢</a
+            >
+          </h4>
+          <img
+            src="https://shawnlin0201.github.io/images/d3js/d3.png"
+            height="200"
+          />
         </section>
         <section>
           <h3>分享會大綱</h3>
@@ -62,6 +73,15 @@
               可以看各種神人設計出來的圖表。
             </p>
           </section>
+          <section>
+            <p>
+              這次的分享會主要會是以 d3v4
+              為主，再加上網路上很多圖表的分享也幾乎都是以 v4 而不是 v5
+              為主，要注意的一點是 d3
+              每一個版本的寫法基本上都有點落差，所以這邊的寫法不見得可以完美的套用在
+              v5 上面喔！
+            </p>
+          </section>
         </section>
         <section>
           <section>
@@ -69,7 +89,7 @@
           </section>
           <section>
             <p>
-              scale
+              scale：
               可以想像成比例尺的概念，比例尺就是為了讓我們能在有限的空間內顯示完整的內容，其實很多圖表都會有比例尺，像
               google map 底下就會有個比例尺方便使用者進行畫面的調整。
             </p>
@@ -111,84 +131,315 @@
               簡單小總結一下，當你的資料是無法利用一套計算方法找到彼此關聯性的，像是男生無法經由計算得到女生，這種就是非連續性的資料，反之可以利用一些計算方法找到關聯性的，像是數字與數字之間可以用減法找到關聯性，這種就是連續性的資料。
             </p>
           </section>
-        </section>
-        <section>
           <section>
-            <h3>什麼是 Pod？</h3>
+            <p>
+              range： 當我們設定完圖表比例尺後，要將這個圖表輸出至這個 range
+              的範圍內，至於內部的做法可以用映射的方式來思考，簡單來說我們會將輸入的資料一個一個照比例的方式對應到
+              range 中被切割好的範圍上，至於 range 中間是怎麼切割的我們不用理他
+              D3 都會幫我們處理好．
+            </p>
           </section>
           <section>
-            <p>在官網上是這樣說明的</p>
-            <blockquote>
-              Pods are the smallest deployable units of computing that can be
-              created and managed in Kubernetes.
-            </blockquote>
-          </section>
-          <section>
-            <p>簡單來說 Pod 就是 k8s 中可以執行的最小單位</p>
+            <img src="https://imgur.com/IE907qz.jpg" height="500" />
           </section>
           <section>
             <p>
-              由於 Pod 只是一個可以被執行的最小單位，可想而知在一個 Pod
-              內一定有能被執行的內容
+              通常在撰寫 range 的設定時都會用一個陣列來代表範圍， array[0]
+              代表範圍的起點， array[1] 代表範圍的終點，根據 x 以及 y
+              的不同會設定不同的起點以及終點，在 x 軸通常起點會設為 0
+              而終點會設為該圖表的寬度，畢竟我們在看 x 方位的時候是由左到右。而
+              y 軸起點則是會設定成圖表高度而終點會設定為 0
+              ，因為數值越高一定會在越上面．
             </p>
-            <p>這些可以被執行內容的我們稱之為 container</p>
           </section>
           <section>
-            <p>簡單來說 Pod 的架構圖會長這樣：</p>
-            <img
-              src="https://matthewpalmer.net/kubernetes-app-developer/articles/networking-overview.png"
-              height="500"
-            />
-          </section>
-          <section>
-            <h3>再來講一下 container 吧！</h3>
-          </section>
-          <section>
-            <p>在這些 Pod 中的 container 其實是用 docker 跑起來的</p>
-            <p>在 k8s 中預設的 docker image 是從 dockerHub 上面抓下來</p>
-          </section>
-          <section>
-            <p>當然也可以自己寫 Dockerfile 來建立 image</p>
-            <p>
-              不過就要加上一些設定讓 k8s 在建立 Pod 的時候優先以本地端的 image
-              為主
-            </p>
-            <pre><code class="hljs">imagePullPolicy: IfNotPresent</code></pre>
-          </section>
-        </section>
-        <section>
-          <section>
-            <h3>什麼是 Label？</h3>
-          </section>
-          <section>
-            <p>替 Pod 上標籤，讓這些 Pod 可以方便地被分類分群</p>
-          </section>
-          <section>
-            <p>
-              而 Label 就是一對具有辨識度的 key-value pair，所以可能會這樣寫
-            </p>
+            <h4>range 寫法：</h4>
             <pre>
-              <code class="hljs" data-trim>
-                labels:
-                  tier: frontend
-                  env: dev
+              <code class="javascript" data-trim>
+                const x = d3.range([0, width]);
+                
+                const y = d3.range([height, 0]);
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>domain and endpoint</h3>
+          </section>
+          <section>
+            <p>
+              domain 是 D3 資料的輸入區域範圍，還記得上面提到有了 domain
+              的輸入區域才能把資料映射到 range 的輸出區域上，就像下面這張圖。
+            </p>
+          </section>
+          <section>
+            <img src="https://imgur.com/IE907qz.jpg" height="500" />
+          </section>
+          <section>
+            <p>
+              既然 range 有輸出範圍想當然 domain
+              也會有輸入範圍，接下來要來談談最常用的幾種方法來取得資料的範圍，以下幾種方法都必須要把資料中想擺在座標上的數值都組合成一個陣列並且傳進去當參數，這邊建議用
+              array.map() 的方式進行資料的組合。
+            </p>
+          </section>
+          <section>
+            <h4>d3.max()</h4>
+            <p>取出陣列的最大值。</p>
+            <pre>
+              <code class="javascript" data-trim>
+                const maxValue = d3.max([1, 2, 3, 4, 5]);
+
+                console.log(maxValue); // 輸出 5
               </code>
             </pre>
           </section>
           <section>
-            <h3>什麼是 Annotation？</h3>
+            <h4>d3.min()</h4>
+            <p>取出陣列的最小值。</p>
+            <pre>
+              <code class="javascript" data-trim>
+                const minValue = d3.min([1, 2, 3, 4, 5]);
+                
+                console.log(minValue); // 輸出 1
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h4>d3.extent()</h4>
+            <p>
+              d3.max() 以及 d3.min() 的綜合體，同時取出陣列的最大以及最小值。
+            </p>
+            <pre>
+              <code class="javascript" data-trim>
+                const extentValue = d3.max([1, 2, 3, 4, 5]);
+                
+                console.log(extentValue); // 輸出 [1, 5]
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h3>scaleLinear v.s. scaleBand</h3>
           </section>
           <section>
             <p>
-              Labels
-              的一種，一樣提供識別用，只不過這個識別用是給開發人員看的，k8s
-              並不會採用此標籤
+              至所以這邊會突然提到上面提到的 scale
+              比例尺問題，是因為這兩種比例尺最大的差別就在於 domain
+              要傳入的東西，接下來就會好好的把這兩種比例尺的差別告訴大家！
+            </p>
+          </section>
+          <section>
+            <h4>d3.scaleLinear()</h4>
+            <p>
+              由於是線性比例尺，因此比例尺上的點都可以經由計算去給出最適當的映射比例，因此在
+              `d3.scaleLinear()` 上只要給定 domain 的範圍即可。
+            </p>
+          </section>
+          <section>
+            <img src="https://imgur.com/HqZew3e.png" height="500" />
+          </section>
+          <section>
+            <h4>d3.scaleBand()</h4>
+            <p>
+              由於不是線性比例尺，因此比例尺上的點無法經由計算去給出最適當的映射比例，因此在
+              `d3.scaleBand()` 上只要是要擺在 domain 上的資料全部都要餵給 domain
+              才行。
+            </p>
+          </section>
+          <section>
+            <img src="https://imgur.com/DNMaBIK.png" width="100%" />
+          </section>
+          <section>
+            <p>
+              接下來這個部分跟圖表的設定就比較沒有關係了，純粹是我有點強迫症，有時候看到圖表
+              y 軸沒有完整的把數值都列出來就會覺得很阿雜，就像下圖這樣：
+            </p>
+          </section>
+          <section>
+            <img src="https://imgur.com/SrtWCJ6.png" height="500" />
+          </section>
+          <section>
+            <p>
+              不曉得大家看到這種圖表的時候會不會很想修改一下，至少把 y
+              軸完整的畫出來，所以我就想了一個方法來解決這個問題，也順便把這個點稱作為
+              endpoint 代表範圍的終點，接下來就自肥一下把取得這個 endpoint
+              的方法稱作為 `getSmartEndpoint()` 吧XD
+            </p>
+          </section>
+          <section>
+            <p>這邊以 step 代表最大值位數一樣的最小值，count 代表位數</p>
+            <ol>
+              <li>
+                先計算出這個最大值是幾位數。以 10 的次方為單位湊出這個
+                step，例如 123 就會是 100 。
+              </li>
+              <li>
+                為了讓最後 y 軸的最大值離我們原始資料的最大值最接近，這邊會以 5
+                的倍數為基準去改變剛剛算出來最大值位數的最小值。
+              </li>
+              <li>
+                重新計算最大值與新 step 的差距倍數，並利用 Math.ceil()
+                進行無條件進位。
+              </li>
+              <li>
+                最後再利用剛剛算出來的倍數以及新的 step 的相乘得到最後的
+                endpoint 。
+              </li>
+            </ol>
+          </section>
+          <section>
+            <p>最終寫法如下：</p>
+            <pre>
+              <code class="javascript" data-trim>
+                // val 為 d3.max() 得到的資料最大值
+                function getSmartEndpoint(val) {
+                  // 先取得最大值的位數，並算出這個位數的最小值
+                  let count = Math.floor(val).toString().length - 1
+                  let step = Math.pow(10, count)
+                
+                  // 以 5 的倍數為基準，假如最大值除以此位數的最小值小於 5
+                  if (val / step < 5) {
+                  // 將這個位數最小值砍半，這樣之後就會是以 5 為基準了
+                    step = step / 2
+                  } 
+
+                  count = Math.ceil(val / step)
+                
+                  return count * step
+                }
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>time format</h3>
+          </section>
+          <section>
+            <p>
+              一般來說 JS 用來處理時間的套件相信大家首選都是
+              <a
+                href="https://momentjs.com/"
+                target="_blank"
+                rel="noopener nofollow noreferrer"
+                >Moment.js</a
+              >
+              或者是
+              <a
+                href="https://day.js.org/"
+                target="_blank"
+                rel="noopener nofollow noreferrer"
+                >Day.js</a
+              >，既然都在講 D3.js 了，所以接下來要來介紹 D3
+              自己做的用來處理時間的 API ： d3.timeParse()。
+            </p>
+          </section>
+          <section>
+            <h4>d3.timeParse()</h4>
+            <p>
+              d3.timeParse() 是 D3 用來處理時間格式的 API ，如果要在 D3
+              的圖表中繪製跟時間有關的圖表都必須要利用 d3.timeParse()
+              先進行時間的轉換， d3.timeParse() 本身是一個 function
+              而且也會回傳一個 function ，寫法像下面這樣：
             </p>
             <pre>
-              <code class="hljs" data-trim>
-                annotations:
-                  version: latest
-                  contact: andychen@koodata.com.tw
+              <code class="javascript" data-trim>
+                const parseTime = d3.timeParse();
+                parseTime(time);
+              </code>
+            </pre>
+          </section>
+          <section>
+            <p>
+              常用一些 time format
+              工具的你應該會發現好像少了什麼東西，一般來說這種處理時間的 API
+              應該都要帶一些參數進去才對，像 Moment.js 在設定時間時會這樣寫：
+            </p>
+            <pre>
+              <code class="javascript" data-trim>
+                moment().format('MMMM DD YYYY, h:mm:ss a');
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h4>介紹幾個常用的參數及作用</h4>
+            <img src="https://imgur.com/FgxNiNR.png" height="500" />
+          </section>
+          <section>
+            <p>知道這些參數之後就可以套用到 d3.timeParse() 中啦！</p>
+            <pre>
+              <code class="javascript" data-trim>
+                const date = '2021-09-09';
+                const parseTime = d3.timeParse('%Y-%m-%d');
+                const newDate = parseTime(date);
+                console.log(newDate);   // Mon Sep 09 2021 00:00:00 GMT+0800 (台北標準時間)
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h4>溫馨小提醒：</h4>
+            <p>
+              在使用 D3
+              進行時間轉換的時候要記得參數格式必須要跟傳進來的資料格式一樣，舉例來說今天有個日期是
+              '09-09' 這時候參數就必須要設定成 '%m-%d'
+              ，如果格式不一樣的話最後得到的結果就會是 NULL 喔！
+            </p>
+          </section>
+          <section>
+            <p>
+              介紹了 d3.parseTime() 後，雖然時間是順利轉換了 D3
+              也可以順利的讀懂了，但是有個問題是這個轉換過的格式我們工程師看不懂啊!!!
+              所以接下來要來介紹 d3.timeFormat()
+              這樣就可以順利地轉換成我們看得懂的格式了，不過使用 d3.timeFormat()
+              的時機是在 Axis 上，這個會在之後提到，這裡對 Axis
+              稍微有個印象就好。
+            </p>
+          </section>
+          <section>
+            <p>
+              d3.timeFormat() 的寫法就跟 d3.parseTime() 一樣，差別在於
+              d3.timeFormat
+              是自己可以設定之後日期的顯示格式，所以就不用按照原始資料的日期格式來進行參數的配置，這邊想怎麼寫就怎麼寫，寫法如下：
+            </p>
+            <pre>
+              <code class="javascript" data-trim>
+                const date = '2021-09-09';
+                const parseTime = d3.timeParse('%Y-%m-%d');
+                const newDate = parseTime(date);
+                console.log(newDate);      // Mon Sep 09 2021 00:00:00 GMT+0800 (台北標準時間)
+
+                const timeFormat = d3.timeFormat('%Y/%m/%d');
+                const normalDate = timeFormat(newDate);
+                console.log(normalDate);   // 2021/09/09
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h4>與 domain 的結合</h4>
+            <p>
+              最後就來做個簡單的組合並且把處理過後的資料丟到 domain
+              吧！還記得前面提到 scale 中有一個 d3.scaleLinear() 嗎？通常用到
+              d3.timeParse() 的都會使用連續比例尺，藉由 d3.timeParse()
+              我們就可以把普通的時間字串轉為 D3
+              可以進行計算用的時間單位，如此一來便可以利用 d3.scaleLinear()
+              的特性讓 domain
+              只需要填入範圍值即可，接下來就用個簡單的範例碼來組合這幾個內容吧！
+            </p>
+          </section>
+          <section>
+            <pre>
+              <code class="javascript" data-trim>
+              // 設定 x 座標的比例尺
+              const width = 300;
+              const x = d3.scaleLinear().range([0, width]);
+
+              // 進行時間轉換讓 D3 在繪製的時候不會出錯
+              const originData = ['2021-09-09', '2021-09-10', '2021-09-11'];
+              const parseTime = d3.timeParse('%Y-%m-%d');
+              const newData = originData.map(data => parseTime(data));
+
+              // 將轉換過的時間丟進 domain 中
+              x.domain(d3.extent(newData));
               </code>
             </pre>
           </section>
@@ -421,7 +672,7 @@
     Reveal.initialize({
       dependencies: [
         {
-          src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/plugin/highlight/highlight.min.js',
+          src: "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.8.0/plugin/highlight/highlight.min.js",
           async: true,
         },
       ],
