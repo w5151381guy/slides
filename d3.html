@@ -50,7 +50,7 @@
             <li>time format and number format</li>
             <li>select, append, and attr</li>
             <li>data</li>
-            <li>Axis</li>
+            <li>Axis、ticks</li>
             <li>chart event and tooltip</li>
             <li>transform</li>
             <li>DEMO</li>
@@ -446,220 +446,256 @@
         </section>
         <section>
           <section>
-            <h3>什麼是 service？</h3>
-          </section>
-          <section>
-            <p>在官網上是這樣說明的：</p>
-            <blockquote>
-              An abstract way to expose an application running on a set of Pods
-              as a network service.
-            </blockquote>
+            <h3>number format</h3>
           </section>
           <section>
             <p>
-              service
-              的存在就是建立一個網路連線通道讓應用程式可以正確地連結到正在運行的
-              Pods
+              number format 基本上跟剛剛講的 time format
+              是差不多的觀念，只差在一個是用來處理數字另一個是用來處理時間
+            </p>
+          </section>
+          <section>
+            <h4>參數</h4>
+            <img src="https://imgur.com/9yIXl2d.png" height="500" />
+          </section>
+          <section>
+            <h4>轉換結果</h4>
+            <img src="https://imgur.com/aN9Klml.png" height="500" />
+          </section>
+          <section>
+            <p>
+              但看了這些轉換應該會覺得，有些結果後面真的太多 0
+              了，有沒有辦法可以一鍵刪除沒有用處的 0 ，其實 D3
+              也幫你想好了，只要在參數前面加個 ~ 就可以刪掉那些多餘的 0
+              了，不過這個 ~ 只適用在 e 、 r 、 % 以及 s 這四種參數上喔！
+            </p>
+          </section>
+          <section>
+            <pre>
+              <code class="javascript" data-trim>
+                const eFormat = d3.format('~e');
+                const rFormat = d3.format('~r');
+                const percentFormat = d3.format('~%');
+                const sFormat = d3.format('~s');
+
+                const originNumber = 12345;
+
+                console.log(eFormat(originNumber));          // 1.2345e+4
+                console.log(rFormat(originNumber));          // 12345
+                console.log(percentFormat(originNumber));    // 1234500%
+                console.log(sFormat(originNumber));          // 12.345k
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h4>溫馨小提醒：</h4>
+            <p>
+              經由 d3.format()
+              轉換後的數值，其型態會是字串而非原本的數字，這樣就不能使用
+              d3.scaleLinear() 這個連續比例尺了！
+            </p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>select、append、attr</h3>
+          </section>
+          <section>
+            <p>
+              select 在做的事情就是負責選取，選取的東西就是 DOM 上的節點，其實
+              D3 可以選取的東西有兩種，一種是 selector 另一種是 node
+              非常的彈性，
             </p>
           </section>
           <section>
             <ul>
               <li>
-                ClusterIP: 讓在同一個 cluster 中的其他服務可以透過這個 IP 訪問到
-                Pod
+                selector: 利用 CSS selector
+                的方式來取得元素，所以寫法就跟以前在寫 jQuery 的時候很像，只是把
+                $ 改成 d3.select() 而已。
               </li>
               <li>
-                NodePort: 讓在不同的 cluster 中的服務可以透過 NodePort 訪問到
-                Pod
+                node: 透過 DOM 操作來取得元素，推薦使用 `document.querySelector`
+                的方式來取得元素
               </li>
             </ul>
           </section>
           <section>
-            <p>加上 service 之後，目前 k8s 的流程圖會長這樣：</p>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pod-networking.png/700px-Pod-networking.png"
-              height="500"
-            />
+            <pre>
+              <code class="javascript" data-trim>
+                const selectedNode = d3.select('body');
+              </code>
+            </pre>
+          </section>
+          <section>
+            <p>
+              append 顧名思義就是添加的意思，在 d3.append() 中就是負責新增 Node
+              的 API ，一定要先選取過後才可以進行添加 Node 的動作，不然 D3
+              也不知道要把這個 Node 新增在哪邊。
+            </p>
+          </section>
+          <section>
+            <pre>
+              <code class="javascript" data-trim>
+                const selectedNode = d3.select('body');
+                const appendNode = selectedNode.append('svg');
+              </code>
+            </pre>
+          </section>
+          <section>
+            <p>
+              attr 是 attribute 的縮寫，所以 d3.attr() 就是負責替這個 Node 添加
+              attribute 的 API， d3.attr() 一共會帶兩個參數，順序為：
+              attributeName 以及 attributeValue
+            </p>
+          </section>
+          <section>
+            <pre>
+              <code class="javascript" data-trim>
+                const selectedNode = d3.select('body');
+                const appendNode = selectedNode.append('svg');
+                const attrNode = appendNode.attr('width', 300);
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h4>最後來組合上面提到的內容吧</h4>
+            <pre>
+              <code class="javascript" data-trim>
+                const width = 300;
+                const height = 300;
+
+                const svg = d3
+                  .select('body')
+                  .append('svg')
+                  .attr('width', width)
+                  .attr('height', height)
+              </code>
+            </pre>
           </section>
         </section>
         <section>
           <section>
-            <h3>什麼是 Ingress？</h3>
-          </section>
-          <section>
-            <p>在官網上是這樣說明的</p>
-            <blockquote>
-              An API object that manages external access to the services in a
-              cluster, typically HTTP.
-            </blockquote>
+            <h3>data</h3>
           </section>
           <section>
             <p>
-              Ingress 可以幫助我們統一一個對外的 port number，並且根據 hostname
-              或是 pathname 決定封包要轉發到哪個 Service 上
+              selectAll: 跟 select 很像，只是 selectAll
+              會把所有的元素都取出來，不像 select 只會取第一個匹配的元素
             </p>
           </section>
           <section>
-            <ul>
-              <li>將不同路徑的請求對應到不同的 Service 物件</li>
-              <li>將不同 domain name 的請求對應到不同的 Service 物件</li>
-              <li>支援 SSL Termination</li>
-            </ul>
+            <p>
+              data 就是要把資料帶給 D3 讓他能正式繪製這些圖表，這邊有個小觀念是
+              d3.data() 這個 api 只支援 array
+              type，所以在傳遞資料前一定要用陣列包起來，而且 d3.data()
+              只會解析陣列第一層的元素
+            </p>
           </section>
           <section>
-            <p>再加上 Ingress 之後，目前 k8s 的流程圖會長這樣：</p>
-            <img
-              src="https://matthewpalmer.net/kubernetes-app-developer/articles/ingress.png"
-              height="500"
-            />
+            <pre>
+              <code class="javascript" data-trim>
+                const data1 = [1, 2, 3, 4, 5]
+                const svgData1 = d3.data(data1)    // 傳進去的為陣列中的元素： 1, 2, 3, 4, 5
+
+                const data2 = [[1, 2, 3, 4, 5]]
+                const svgData2 = d3.data(data2)    // 傳進去的為 [1, 2, 3, 4, 5]
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h4>data 內部操作</h4>
+            <p>D3 在處理 data 時一共有三個操作，分別是 enter、update、exit</p>
+          </section>
+          <section>
+            <p>
+              enter: 當原始資料的數量 <b>大於</b> 選取元素數量時，必須要使用
+              d3.enter() 的方式才能將資料正確的餵給元素， d3.enter()
+              會自動建立與原始資料數量相同的元素，以便於資料可以正確地輸入到每個元素中。
+            </p>
+            <img src="https://imgur.com/JAvfyiE.png" height="250" />
+          </section>
+          <section>
+            <p>
+              update: 當原始資料的數量
+              <b>等於</b> 選取元素數量時，這些元素以及資料相互對應就稱為
+              update。
+            </p>
+            <img src="https://imgur.com/Ivw49KH.png" height="400" />
+          </section>
+          <section>
+            <p>
+              exit: 當原始資料的數量 <b>小於</b> 選取元素數量時，必須要使用
+              d3.exit() 的方式才能將資料正確的餵給元素， d3.exit()
+              會自動刪除元素直到與原始資料數量相同，以便於資料可以正確地輸入到每個元素中。
+            </p>
+            <img src="https://imgur.com/dXgpyJS.png" height="250" />
+          </section>
+          <section>
+            <p>原始資料數量大於選取元素數量</p>
+            <img src="https://imgur.com/wMz4TXt.gif" height="400" />
+          </section>
+          <section>
+            <p>原始資料數量小於選取元素數量</p>
+            <img src="https://imgur.com/dEiNlun.gif" height="400" />
+          </section>
+          <section>
+            <p>
+              其實 d3.data() 是可以利用 callback
+              的方式來幫助解析到更深層的陣列結構
+            </p>
+            <pre>
+              <code class="javascript" data-trim>
+                const data = [[1, 2, 3, 4, 5]]
+                const svgData = d3
+                  .data(data)
+                  .enter()       // 這時候傳進去的 data 為 [1, 2, 3, 4, 5]
+                  .data(d => d)  // 這個 d 為 [1, 2, 3, 4, 5]
+                  .enter()       // 這時候傳進去的 data 為 1, 2, 3, 4, 5
+              </code>
+            </pre>
           </section>
         </section>
         <section>
           <section>
-            <h3>什麼是 Volumes？</h3>
+            <h3>Axis、ticks</h3>
           </section>
           <section>
             <p>
-              Volumes 為 k8s cluster 用來儲存資料的地方，不但能將 container
-              的資料存下來，同時也能利用掛載(mounting) 的方式提供給其他 Pod 使用
+              還記得前面在介紹 D3 的時候有講到 domain 這個輸入區域嗎？其實
+              domain 跟 Axis 可說是非常息息相關的存在，我們會將設定好的 domain
+              傳入 Axis ，這樣就可以順利的把 domain
+              的資訊擺到座標軸上了，而座標軸一共有四種方向可以擺放，分別為：
+              d3.axisTop() 、 d3.axisBottom() 、 d3.axisLeft() 以及
+              d3.axisRight() ，寫法如下：
             </p>
           </section>
           <section>
-            <h3>Volumes 類型</h3>
+            <pre>
+              <code class="javascript" data-trim>
+                // 設定 x 軸 domain
+                const x = d3.scaleLinear().domain()
+                // 將 x 軸資料擺放在底部
+                const xAxis = d3.axisBottom(x)
+
+                // 設定 y 軸 domain
+                const y = d3.scaleLinear().domain()
+                // 將 y 軸資料擺放在左邊
+                const yAxis = d3.axisLeft(y)
+              </code>
+            </pre>
           </section>
           <section>
-            <ul>
-              <li>emptyDir</li>
-              <li>hostPath</li>
-              <li>Cloud Storage</li>
-              <li>Network FileSystem(NFS)</li>
-            </ul>
-          </section>
-          <section>
-            <h3>emptyDir</h3>
             <p>
-              當新增一個新的 Pod 的時候，k8s 就會在這個 Pod 新增一個 emptyDir
-              ，讓這個 Pod 內所有的 container 都可以存取這個 emptyDir ，當 Pod
-              被移除時，該 emptyDir 也會跟著被移除。
+              ticks
+              是用來決定這個座標軸需要顯示哪些東西，有的時候為了要讓座標軸看起來比較乾淨一點就會想省略一些中間的座標，這時候就可以透過
+              ticks 進行調整，而 D3 針對 ticks 也提供了許多 API 來設定：
             </p>
-          </section>
-          <section>
-            <h3>hostPath</h3>
-            <p>
-              在 Pod 物件上，掛載 Node 的資料夾或檔案，簡單來說就是直接把機器上的檔案掛載到
-              Pod 中
-            </p>
-          </section>
-          <section>
-            <h3>Cloud Storage</h3>
-            <p>
-              使用雲端硬碟的 Volumes ，常見的有 AWS EBS、Google Disk、Microsoft
-              Azure Disk
-            </p>
-          </section>
-          <section>
-            <h3>Network FileSystem</h3>
-            <p>利用 NFS 的原理存取同一個網域下的機器中的資料</p>
           </section>
         </section>
         <section>
           <section>
-            <h3>什麼是 Secret？</h3>
-          </section>
-          <section>
-            <p>用來儲存 k8s 上的機密資料</p>
-            <p>例如使用者帳密、ssl等等</p>
-          </section>
-          <section>
-            <h3>Secret 的使用方式</h3>
-          </section>
-          <section>
-            <ul>
-              <li>將 Secret 當作環境變數</li>
-              <li>將建立好的 Secret file 掛載在某個 Pod 的路徑上</li>
-              <li>Secret 會將內部資料進行 base64 加密</li>
-            </ul>
-          </section>
-          <section>
-            <h3>如何建立 Secret？</h3>
-          </section>
-          <section>
-            <p>首先準備一份比較機密的資料，這邊用 tls 憑證做範例</p>
-          </section>
-          <section>
-            <p>
-              kubectl create secret generic secretName --from-file=file1Path
-              --from-file=file2Path
-            </p>
-            <img src="https://imgur.com/Rg6orY8.png" />
-          </section>
-          <section>
-            <p>kubectl get secret</p>
-            <img src="https://imgur.com/DDVGv4s.png" />
-          </section>
-        </section>
-        <section>
-          <section>
-            <h3>什麼是 ConfigMap？</h3>
-          </section>
-          <section>
-            <p>
-              相較於 Secret，ConfigMap
-              通常是用來存放比較不機密但偏向部署面的資料
-            </p>
-            <p>例如 nginx 設定、 DB IP 等等</p>
-          </section>
-          <section>
-            <h3>ConfigMap 特性</h3>
-          </section>
-          <section>
-            <ul>
-              <li>一個 ConfigMap 物件可以存入整個 configuration file</li>
-              <li>無需修改程式碼，可以替換不同環境的 Config</li>
-              <li>統一存放所有的 configuration</li>
-            </ul>
-          </section>
-          <section>
-            <h3>如何建立 ConfigMap？</h3>
-          </section>
-          <section>
-            <p>首先準備一份部署面的設定檔，這邊以 nginx 設定檔為範例</p>
-          </section>
-          <section>
-            <p>kubectl create configmap configName --from-file=filePath</p>
-            <img src="https://imgur.com/lFZsHVu.png" />
-          </section>
-          <section>
-            <p>kubectl get configmap</p>
-            <img src="https://imgur.com/9Ka6xnF.png" />
-          </section>
-        </section>
-        <section>
-          <section>
-            <h3>什麼是 Namespace？</h3>
-          </section>
-          <section>
-            <p>Namespace 就是抽象的 cluster</p>
-            <p>讓我們能根據專案不同，將原本擁有實體資源的單一 k8s cluster</p>
-            <p>劃分成幾個不同的 virtual cluster</p>
-            <p>預設所有建立的 Pod 都會擺放在 default 這個 Namespace</p>
-          </section>
-          <section>
-            <h3>Namespace 特性</h3>
-          </section>
-          <section>
-            <ul>
-              <li>在同一個 cluster 中，每個 Namespace 的命名需要有獨特性</li>
-              <li>當一個 Namespace 被刪除時，內部的物件也會跟著被刪除</li>
-            </ul>
-          </section>
-        </section>
-        <section>
-          <section>
-            <p>下次分享會的主題會是 k8s 進階觀念</p>
-          </section>
-          <section>
-            <p>謝謝大家！</p>
+            <h3></h3>
           </section>
         </section>
       </div>
