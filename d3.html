@@ -331,13 +331,13 @@
                 rel="noopener nofollow noreferrer"
                 >Day.js</a
               >，既然都在講 D3.js 了，所以接下來要來介紹 D3
-              自己做的用來處理時間的 API ： d3.timeParse()。
+              自己做的用來處理時間的 method ： d3.timeParse()。
             </p>
           </section>
           <section>
             <h4>d3.timeParse()</h4>
             <p>
-              d3.timeParse() 是 D3 用來處理時間格式的 API ，如果要在 D3
+              d3.timeParse() 是 D3 用來處理時間格式的 method ，如果要在 D3
               的圖表中繪製跟時間有關的圖表都必須要利用 d3.timeParse()
               先進行時間的轉換， d3.timeParse() 本身是一個 function
               而且也會回傳一個 function ，寫法像下面這樣：
@@ -352,7 +352,7 @@
           <section>
             <p>
               常用一些 time format
-              工具的你應該會發現好像少了什麼東西，一般來說這種處理時間的 API
+              工具的你應該會發現好像少了什麼東西，一般來說這種處理時間的 method
               應該都要帶一些參數進去才對，像 Moment.js 在設定時間時會這樣寫：
             </p>
             <pre>
@@ -530,7 +530,7 @@
           <section>
             <p>
               append 顧名思義就是添加的意思，在 d3.append() 中就是負責新增 Node
-              的 API ，一定要先選取過後才可以進行添加 Node 的動作，不然 D3
+              的 method ，一定要先選取過後才可以進行添加 Node 的動作，不然 D3
               也不知道要把這個 Node 新增在哪邊。
             </p>
           </section>
@@ -545,7 +545,7 @@
           <section>
             <p>
               attr 是 attribute 的縮寫，所以 d3.attr() 就是負責替這個 Node 添加
-              attribute 的 API， d3.attr() 一共會帶兩個參數，順序為：
+              attribute 的 method， d3.attr() 一共會帶兩個參數，順序為：
               attributeName 以及 attributeValue
             </p>
           </section>
@@ -587,7 +587,7 @@
           <section>
             <p>
               data 就是要把資料帶給 D3 讓他能正式繪製這些圖表，這邊有個小觀念是
-              d3.data() 這個 api 只支援 array
+              d3.data() 這個 method 只支援 array
               type，所以在傳遞資料前一定要用陣列包起來，而且 d3.data()
               只會解析陣列第一層的元素
             </p>
@@ -689,13 +689,101 @@
             <p>
               ticks
               是用來決定這個座標軸需要顯示哪些東西，有的時候為了要讓座標軸看起來比較乾淨一點就會想省略一些中間的座標，這時候就可以透過
-              ticks 進行調整，而 D3 針對 ticks 也提供了許多 API 來設定：
+              ticks 進行調整，而 D3 針對 ticks 也提供了許多 method 來設定：
             </p>
+          </section>
+          <section>
+            <h4>axis.ticks()</h4>
+            <p>
+              用來設定座標軸上座標的數量，這邊數量也不是想設多少就能顯示多少，基本上
+              D3 對於 ticks 的數量只有 5 的倍數可以使用，假如今天設定
+              axis.ticks(6) 這時候的座標其實顯示不止 6
+              個，這邊要特別注意一下喔！
+            </p>
+          </section>
+          <section>
+            <img src="https://imgur.com/cgiEtAm.gif" height="500" />
+          </section>
+          <section>
+            <h4>axis.tickValues()</h4>
+            <p>
+              客製化座標軸上的值，如果使用了 axis.tickValues()
+              這時候的座標軸就不會以 domain 內的數值進行顯示而是以
+              axis.tickValues() 的數值進行顯示，所以 axis.tickValues()
+              吃的參數也是以陣列為主。
+            </p>
+          </section>
+          <section>
+            <h4>axis.tickFormat()</h4>
+            <p>
+              還記得上面提到的 d3.timeFormat() 以及 d3.format()
+              嗎？這兩個用來處理時間格式以及數字格式的 method
+              ，想要在座標軸上面顯示這些客製化後的格式就要利用 axis.tickFormat()
+              啦！只要把上面兩個 method 當作參數傳進去 axis.tickFormat()
+              內就可以得到想要的格式了。
+            </p>
+          </section>
+          <section>
+            <h4>axis.tickSizeInner()</h4>
+            <p>
+              用來設定座標軸上每個座標的分隔線條，若 axis.tickSizeInner()
+              的參數設定為負值，分隔線條會往坐標軸上方繪製，反之則會往下方繪製。
+            </p>
+          </section>
+          <section>
+            <h4>axis.tickSizeOuter()</h4>
+            <p>
+              用來設定座標軸上的外框，若 axis.tickSizeOuter()
+              的參數設定為負值，外框會往坐標軸上方繪製，反之則會往下方繪製。
+            </p>
+          </section>
+          <section>
+            <h4>axis.tickSize()</h4>
+            <p>
+              axis.tickSizeInner() 與 axis.tickSizeOuter()
+              的結合，可以帶兩個參數，其順序為 Inner 之後才是 Outer
+              ，所以如果懶得寫兩種 method ，不妨可以用 axis.tickSize()
+              來合併上面兩個設定座標軸線條以及外框的 method 。
+            </p>
+          </section>
+          <section>
+            <h4>如何正確繪製座標軸</h4>
+            <p>
+              這邊要用到 d3.call()，這個 D3 用來調用 function 的
+              method，我自己的習慣而言會先把座標軸的設定都寫好，這樣就不用一直複製很多程式碼，直接用
+              call function 的方式就可以了，或者懶得寫很多行也可以利用 d3.call()
+              的方式把這些 method 串在同一行來增加程式碼的美觀程度，寫法如下：
+            </p>
+            <pre>
+              <code class="javascript" data-trim>
+                svg.call(d3.axisBottom(x).tickSizeOuter(0));
+              </code>
+            </pre>
           </section>
         </section>
         <section>
           <section>
-            <h3></h3>
+            <h3>chart event、tooltip</h3>
+          </section>
+          <section></section>
+        </section>
+        <section>
+          <section>
+            <h3>transform</h3>
+          </section>
+          <section></section>
+        </section>
+        <section>
+          <section>
+            <h3>It's DEMO time</h3>
+          </section>
+          <section>
+            範例碼連結可以點<a
+              href="https://github.com/w5151381guy/D3-practice"
+              target="_blank"
+              rel="noopener nofollow noreferrer"
+              >這邊</a
+            >。
           </section>
         </section>
       </div>
