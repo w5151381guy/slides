@@ -765,13 +765,124 @@
           <section>
             <h3>chart event、tooltip</h3>
           </section>
-          <section></section>
+          <section>
+            <p>
+              chart event 就是要幫圖表加上一些可以跟使用者互動的
+              event，寫法上也很簡單跟 jQuery 在綁定事件的寫法很像：
+            </p>
+            <pre>
+              <code class="javascript" data-trim>
+                svg
+                  .on('mouseover', tooltip.show)
+                  .on('mouseout', tooltip.hide)
+              </code>
+            </pre>
+          </section>
+          <section>
+            <p>
+              tooltip
+              存在的意義就是為了讓圖表可以顯示更多的資訊，透過上面所教的圖表
+              event
+              讓使用者除了可以跟圖表進行互動外，同時也可以藉由這個互動得到更多的圖表資訊。
+            </p>
+          </section>
+          <section>
+            <p>
+              <a
+                href="https://github.com/caged/d3-tip"
+                target="_blank"
+                rel="noreferrer noopener nofollow"
+                >d3-tip</a
+              >
+            </p>
+          </section>
+          <section>
+            <img src="https://imgur.com/EqRZKDI.png" height="500" />
+          </section>
+          <section>
+            <h4>結合剛剛說的：</h4>
+            <pre>
+              <code class="javascript" data-trim>
+                // 將 d3-tip import 進來
+                import d3Tip from 'd3-tip'
+                              
+                // 設定 tooltip
+                function setTooltip() {
+                  // 初始化 tooltip function
+                  const tooltip = d3Tip()
+                    .attr('class', 'd3-tip')
+                    .offset([-14, 0])
+                  
+                  // 設定 tooltip 內容
+                  tooltip.html(
+                    d => `
+                      <div class="name">${d.name}</div>
+                      <div class="value">${d.value}</div>
+                    `
+                  )
+                  
+                  // 回傳 tooltip function
+                  return tooltip
+                }
+                
+                // 傳入設定好的 svg 中
+                const tooltip = setTooltip()
+                svg.call(tooltip)
+              </code>
+            </pre>
+          </section>
+          <section>
+            <img src="https://imgur.com/t8mc2hk.gif" height="500" />
+          </section>
         </section>
         <section>
           <section>
             <h3>transform</h3>
           </section>
-          <section></section>
+          <section>
+            <p>
+              transform 這個屬性就跟 CSS transform
+              一模一樣，做的就是移動位置，致所以用 transform 而不是用 top
+              這些屬性的原因是 transform 不會經過 reflow 可以增加網頁的效能．
+            </p>
+          </section>
+          <section>
+            <img src="https://imgur.com/robE6NS.png" height="500" />
+          </section>
+          <section>
+            <h4>未加 transform 的效果</h4>
+            <img src="https://imgur.com/MidxOV5.png" height="400" />
+          </section>
+          <section>
+            <h4>加了 transform 的效果</h4>
+            <img src="https://imgur.com/JOYrHiF.png" height="400" />
+          </section>
+          <section>
+            <pre>
+              <code class="javascript" data-trim>
+                const margin = { top: 25, right: 25, bottom: 25, left: 25 }
+                const width = 300
+                const height = 300
+
+                const svg = d3
+                  .select('body')
+                  .append('svg')
+                  .attr('width', width - margin.left - margin.right)
+                  .attr('height', height - margin.top - margin.bottom)
+                  .append('g')
+                  .attr('transform', `translate(${margin.left}, ${margin.top})`)
+              </code>
+            </pre>
+          </section>
+          <section>
+            <p>
+              這邊可能會覺得奇怪怎麼這邊加了一個 group
+              的元素，其實道理很簡單因為今天要平移的是 svg
+              內全部的圖表，大家可以想想看假如我今天只有平移外層的 svg
+              容器但內層的圖表卻沒有平移，這樣一定無法完整顯示全部的圖表，所以在平移的時候都會平移內層的圖表，外層只需要當作容器進行擺放而已，所以這邊用個
+              group 包起來，這樣底下的圖表也都可以吃到這個 group 的設定了。
+            </p>
+          </section>
         </section>
         <section>
           <section>
